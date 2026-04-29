@@ -9,6 +9,9 @@ const pool = new Pool({
 
 export default defineConfig({
 	schema: "prisma/schema.prisma",
+	migrations: {
+		path: "prisma/migration"
+	},
 	datasource: { url: process.env.DATABASE_URL },
 	adapter: new PrismaPg(pool)
 });

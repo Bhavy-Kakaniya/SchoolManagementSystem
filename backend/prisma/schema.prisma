@@ -1,12 +1,123 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider  = "postgresql"
+    provider = "postgresql"
+}
+
+model User {
+    id    String @id @default(uuid())
+    email String @unique
+    name  String
+
+    createdAt DateTime @default(now())
+
+    roles UserRole[]
+
+    student   Student?
+}
+
+model Role {
+    id    String     @id @default(uuid())
+    name  String     @unique // student teacher parent
+    users UserRole[]
+}
+
+model UserRole {
+    userId String
+    roleId String
+    user   User   @relation(fields: [userId], references: [id])
+    role   Role   @relation(fields: [roleId], references: [id])
+
+    @@id([userId, roleId])
+}
+
+model Student {
+    id            String        @id() @default(uuid())
+    userId        String        @unique
+	user		  User			@relation(fields: [userId], references: [id])
+    firstName     String
+    lastName      String
+    gender        Gender
+    dateOfBirth   DateTime
+    phone         String?       @unique
+    bloodGroup    String?
+    address       String?
+    admissionDate DateTime      @default(now())
+    status        StudentStatus @default(ACTIVE)
+
+    enrollments Enrollment[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model AcademicYear {
+    id        String   @id @default(uuid())
+    name      String   @unique
+    startDate DateTime
+    endDate   DateTime
+
+    enrollments Enrollment[]
+
+    createdAt DateTime @default(now())
+}
+
+model Class {
+    id          String  @id @default(uuid())
+    name        String // "10", "11", "12"
+    description String?
+
+    sections Section[]
+
+    createdAt DateTime @default(now())
+}
+
+model Section {
+    id          String       @id @default(uuid())
+    name        String // "A", "B", "C"
+    classId     String
+    class       Class        @relation(fields: [classId], references: [id])
+    enrollments Enrollment[]
+    createdAt   DateTime     @default(now())
+}
+
+model Enrollment {
+    id String @id @default(uuid())
+
+    studentId String
+    student   Student @relation(fields: [studentId], references: [id])
+
+    academicYearId String
+    academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+
+    sectionId String
+    section   Section @relation(fields: [sectionId], references: [id])
+
+    rollNumber Int
+    status     EnrollmentStatus @default(ACTIVE)
+    createdAt  DateTime         @default(now())
+
+    @@unique([academicYearId, sectionId, rollNumber])
+    @@unique([studentId, academicYearId])
+}
+
+enum Gender {
+    MALE
+    FEMALE
+    OTHER
+}
+
+enum StudentStatus {
+    ACTIVE
+    INACTIVE
+    GRADUATED
+    TRANSFERRED
+}
+
+enum EnrollmentStatus {
+    ACTIVE
+    COMPLETED
+    DROPPED
 }
