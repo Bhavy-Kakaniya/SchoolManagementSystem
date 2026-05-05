@@ -1,9 +1,7 @@
-import Image from "next/image";
-
 export default function Home() {
-	return (
-		<>
-			student management system
-		</>
-	);
+  return (
+    <div className="bg-amber-200">
+      hello world
+    </div>
+  );
 }
