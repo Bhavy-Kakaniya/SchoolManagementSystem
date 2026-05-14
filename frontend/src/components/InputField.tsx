@@ -1,14 +1,18 @@
+"use client"
+
 import { InputAdornment, TextField } from '@mui/material';
-// import TextField from '@mui/material/TextField';
 
 interface InputFieldTagProps {
 	label: string;
 	color?: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
 	margin?: 'none' | 'normal' | 'dense';
 	width?: string | number;
-	type?: 'password' | 'text' | 'number',
-	startIcon?: React.ReactNode,
-	endIcon?: React.ReactNode
+	type?: 'password' | 'text' | 'number' | 'email';
+	value?: string | number;
+	required?: true | false
+	onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	startIcon?: React.ReactNode;
+	endIcon?: React.ReactNode;
 }
 
 export default function InputFieldTag({
@@ -17,15 +21,21 @@ export default function InputFieldTag({
 	color = 'primary',
 	width = '100%',
 	type = 'text',
+	value,
+	onChange,
 	startIcon,
-	endIcon
+	endIcon,
+	required,
 }: InputFieldTagProps) {
 	return (
 		<TextField
+			required={required}
 			label={label}
 			margin={margin}
 			color={color}
 			type={type}
+			value={value}
+			onChange={onChange}
 			sx={{ width }}
 			slotProps={{
 				input: {

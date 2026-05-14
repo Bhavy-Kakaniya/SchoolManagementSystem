@@ -1,12 +1,29 @@
+"use client"
+
 import InputFieldTag from "@/components/InputField";
 import Link from "next/link";
 import Lock from '@mui/icons-material/Lock';
 import Visibility from '@mui/icons-material/Visibility';
 import Email from '@mui/icons-material/Email';
+import { useState } from "react";
+import { IconButton } from "@mui/material";
+import { VisibilityOff } from "@mui/icons-material";
 
 const loginButtonClass = "cursor-pointer text-white font-bold ease-in-out rounded-2xl bg-linear-to-br from-green-400 to-blue-600 hover:bg-linear-to-bl focus:outline-none rounded-base text-sm px-20 py-2.5 text-center";
 
-export default function loginPage() {
+export default function LoginPage() {
+    // manage password visibility state
+    const [showPassword, setShowPassword] = useState<boolean>(false)
+    const [inputValue, setInputValue] = useState("")
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        setInputValue(e.target.value)
+    }
+
+    const handleShowPassword = (): void => {
+        setShowPassword((previous_state) => !previous_state);
+    }
+
     return (
         <>
             <div className="flex min-h-screen bg-[#f2f5ff] ">
@@ -21,24 +38,38 @@ export default function loginPage() {
                     <div className="w-[90%] p-2">
                         <div className="text-5xl text-center p-2 rounded-t-md bg-amber-400">Login</div>
                         <div className="bg-amber-100 p-4 rounded-b-md w-fit">
+
                             <form>
 
                                 <div className="m-2">
                                     <InputFieldTag
+                                        type="email"
+                                        required={true}
                                         label="Email Address"
                                         margin="dense"
                                         color="secondary"
                                         width="480px"
-                                        startIcon={<Email className="text-[#232323] m-1"/>}
+                                        startIcon={<Email className="text-[#232323] m-1" />}
                                     />
                                     <InputFieldTag
+                                        required={true}
                                         label="Password"
-                                        type="password"
+                                        type={showPassword ? 'text' : 'password'}
                                         width="480px"
                                         margin="dense"
                                         color="secondary"
+                                        value={inputValue}
+                                        onChange={handleInputChange}
                                         startIcon={<Lock className="text-[#232323] m-1" />}
-                                        endIcon={<Visibility className="text-[#232323]"/>}
+                                        endIcon={
+                                            <IconButton
+                                                onClick={handleShowPassword}
+                                                edge="end"
+                                                size="small"
+                                                className="text-[#232323]"
+                                            >
+                                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                                            </IconButton>}
                                     />
                                 </div>
                                 <div className="text-right p-2 text-blue-800 underline">
