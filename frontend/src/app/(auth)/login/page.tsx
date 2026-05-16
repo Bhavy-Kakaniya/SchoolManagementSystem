@@ -1,6 +1,6 @@
 "use client"
 
-import InputFieldTag from "@/components/InputField";
+import InputFieldTag from "@/components/InputField"; 
 import Link from "next/link";
 import Lock from '@mui/icons-material/Lock';
 import Visibility from '@mui/icons-material/Visibility';
@@ -9,12 +9,12 @@ import { useState } from "react";
 import { IconButton } from "@mui/material";
 import { VisibilityOff } from "@mui/icons-material";
 
-const loginButtonClass = "cursor-pointer text-white font-bold ease-in-out rounded-2xl bg-linear-to-br from-green-400 to-blue-600 hover:bg-linear-to-bl focus:outline-none rounded-base text-sm px-20 py-2.5 text-center";
-
 export default function LoginPage() {
+    const loginButtonClass = "cursor-pointer text-white font-bold ease-in-out rounded-2xl bg-linear-to-br from-green-400 to-blue-600 hover:bg-linear-to-bl focus:outline-none rounded-base text-sm px-20 py-2.5 text-center";
+
     // manage password visibility state
     const [showPassword, setShowPassword] = useState<boolean>(false)
-    const [inputValue, setInputValue] = useState("")
+    const [inputValue, setInputValue] = useState<String>("")
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setInputValue(e.target.value)
@@ -35,6 +35,7 @@ export default function LoginPage() {
                         <form>
 
                             <div className="m-2">
+
                                 <InputFieldTag
                                     type="email"
                                     required={true}
@@ -44,6 +45,7 @@ export default function LoginPage() {
                                     width="480px"
                                     startIcon={<Email className="text-[#232323] m-1" />}
                                 />
+
                                 <InputFieldTag
                                     required={true}
                                     label="Password"
@@ -64,22 +66,26 @@ export default function LoginPage() {
                                             {showPassword ? <VisibilityOff /> : <Visibility />}
                                         </IconButton>}
                                 />
+
                             </div>
+
                             <div className="text-right p-2 text-blue-800 underline">
                                 <Link href="/reset">Forgot Password?</Link>
                             </div>
+
                             <div>
                                 <div className="flex align-center justify-center">
-                                    <button type="button" className={loginButtonClass}>Login</button>
+                                    <button type="button" className="cursor-pointer text-white font-bold ease-in-out rounded-2xl bg-linear-to-br from-green-400 to-blue-600 hover:bg-linear-to-bl focus:outline-none rounded-base text-sm px-20 py-2.5 text-center hover:px-17">Login</button>
                                 </div>
                             </div>
+
                         </form>
+
                     </div>
                 </div>
-
-            </div >
+            </div>
         </>
     )
-}
+}  
 
 // https://www.google.com/search?newwindow=1&sca_esv=78ed2d1ec9f8904c&rlz=1C1CHBF_enIN1113IN1113&udm=2&fbs=ADc_l-aN0CWEZBOHjofHoaMMDiKpaEWjvZ2Py1XXV8d8KvlI3sbM0Xv-BZKE_VrZb6-djVgPsTSy5UjazDfPq8BLa8BriI08eYAyMPM-9LNl6snbW_yG33vd5kd7YGQszX_cbkaDseZZZQ4GJmswgKnVwR-BbFIQ4ksHjYk73mHmEeQacRsvQm4-5-e26BJ6LRr1xFgGV_ekSmQjvkNKKw4olJHuHx0Lcw&q=login+page+school+erp&sa=X&ved=2ahUKEwjTxL_Vuq6UAxU5kVYBHQxPEPoQtKgLegQIFBAB&biw=1536&bih=730&dpr=1.25#sv=CAMSVhoyKhBlLXNQVlVQRDJNNVkwOXlNMg5zUFZVUEQyTTVZMDl5TToOd3dKMWpaTjNnU2VsM00gBCocCgZtb3NhaWMSEGUtc1BWVVBEMk01WTA5eU0YADABGAcgr635qw1KCBABGAEgASgB

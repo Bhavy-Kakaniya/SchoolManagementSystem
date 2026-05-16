@@ -1,7 +1,3 @@
-"use client"
-
-const loginButtonClass = "cursor-pointer text-white font-bold ease-in-out rounded-2xl bg-linear-to-br from-green-400 to-blue-600 hover:bg-linear-to-bl focus:outline-none rounded-base text-sm px-20 py-2.5 text-center";
-
 export default function Layout({ children }: Readonly<{ children: React.ReactNode; }>) {
 
     return (
@@ -18,7 +14,7 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
                     {children}
                 </div>
 
-            </div >
+            </div>
         </>
     )
 }

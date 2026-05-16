@@ -3,12 +3,12 @@
 import { InputAdornment, TextField } from '@mui/material';
 
 interface InputFieldTagProps {
-	label: string;
+	label: String;
 	color?: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
 	margin?: 'none' | 'normal' | 'dense';
 	width?: string | number;
 	type?: 'password' | 'text' | 'number' | 'email';
-	value?: string | number;
+	value?: String | number;
 	required?: true | false
 	onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	startIcon?: React.ReactNode;
