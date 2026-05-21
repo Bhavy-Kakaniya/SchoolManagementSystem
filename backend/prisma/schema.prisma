@@ -8,13 +8,13 @@ datasource db {
 
 model User {
     id        String     @id @default(uuid())
+    schoolId  String
     email     String
     password  String
     name      String
     createdAt DateTime   @default(now())
     student   Student?
     roles     UserRole[]
-    schoolId  String
     school    School     @relation(fields: [schoolId], references: [id])
 
     @@unique([schoolId, email]) // if a parent is working in 2 school then it will be helpful following tenant architecture 
@@ -38,19 +38,23 @@ model UserRole {
 model Student {
     id            String        @id @default(uuid())
     userId        String        @unique
+    schoolId      String
     firstName     String
     lastName      String
     gender        Gender
     dateOfBirth   DateTime
-    phone         String?       @unique
+    phone         String?
     bloodGroup    String?
     address       String?
     admissionDate DateTime      @default(now())
     status        StudentStatus @default(ACTIVE)
     createdAt     DateTime      @default(now())
     updatedAt     DateTime      @updatedAt
-    enrollments   Enrollment[]
+    school        School        @relation(fields: [schoolId], references: [id])
     user          User          @relation(fields: [userId], references: [id])
+    enrollments   Enrollment[]
+
+    @@unique([schoolId, phone])
 }
 
 model AcademicYear {
@@ -62,9 +66,11 @@ model AcademicYear {
     enrollments Enrollment[]
     school      School       @relation(fields: [schoolId], references: [id])
     schoolId    String
+
+    @@unique([schoolId, name])
 }
 
-model Class {
+model SchoolClass {
     id          String    @id @default(uuid())
     name        String
     description String?
@@ -82,7 +88,7 @@ model Section {
     classId     String
     createdAt   DateTime     @default(now())
     enrollments Enrollment[]
-    class       Class        @relation(fields: [classId], references: [id])
+    class       SchoolClass  @relation(fields: [classId], references: [id])
     school      School?      @relation(fields: [schoolId], references: [id])
     schoolId    String?
 }
@@ -90,11 +96,13 @@ model Section {
 model Enrollment {
     id             String           @id @default(uuid())
     studentId      String
+    schoolId       String
     academicYearId String
     sectionId      String
     rollNumber     Int
     status         EnrollmentStatus @default(ACTIVE)
     createdAt      DateTime         @default(now())
+    school         School           @relation(fields: [schoolId], references: [id])
     academicYear   AcademicYear     @relation(fields: [academicYearId], references: [id])
     section        Section          @relation(fields: [sectionId], references: [id])
     student        Student          @relation(fields: [studentId], references: [id])
@@ -110,9 +118,11 @@ model School {
     logo          String?
     createdAt     DateTime       @default(now())
     users         User[]
-    classes       Class[]
+    classes       SchoolClass[]
     sections      Section[]
     academicYears AcademicYear[]
+    students      Student[]
+    enrollments   Enrollment[]
 }
 
 enum Gender {
