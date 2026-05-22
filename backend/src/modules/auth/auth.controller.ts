@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { getMeService, loginUserService, logoutService, refreshTokenService } from "./auth.service";
 
 export const loginController = async(req: Request, res: Response) => {
-    const result = await loginUserService();
+    const result = await loginUserService(req.body);
     res.json(result);
 }
 
