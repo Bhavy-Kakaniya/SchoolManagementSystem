@@ -1,4 +1,7 @@
-import prisma from "../../config/prisma"
+import prisma from '../../config/prisma';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import 'dotenv/config';
 
 export const loginUserService = async (payload: { email: string, password: string }) => {
 
@@ -13,9 +16,33 @@ export const loginUserService = async (payload: { email: string, password: strin
     if (!user)
         throw new Error("User not found");
 
+    // check password
+    const isPasswordMatched = await bcrypt.compare(payload.password, user.password);
+
+    if (!isPasswordMatched)
+        throw new Error("Invalid username or password")
+
+    // provide token to user who had logged in
+    const accessToken = jwt.sign(
+        {
+            userId: user.id,
+            email: user.email,
+            // roles: user.roles, add this later after setup is complete
+        },
+        process.env.JWT_SECRET_KEY!,
+        {
+            expiresIn: "15d" as const,
+        }
+    );
+
     return {
         message: "Login successful",
-        user,
+        accessToken,
+        user: {
+            id: user.id,
+            name: user.name,
+            email: user.email
+        }
     };
 }
 
