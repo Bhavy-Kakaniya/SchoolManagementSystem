@@ -7,3 +7,7 @@ problem solved :
 # 2. Problem in using icons inside MUI Input field
 -> Problem: Faced difficulty adding icons inside the input field using MUI because icons were not positioning correctly inside the text field.
 -> Solution: Used `startAdornment` and `endAdornment` from MUI `InputProps` to place icons properly inside the input field for better UI/UX experience.
+
+# 3. Problem in using req.user in Express Middleware
+-> Problem: TypeScript showed an error because the default Express Request type does not contain a user property.
+-> Solution: Extended the Express Request interface using declaration merging (index.d.ts) so TypeScript recognizes req.user added by the authentication middleware.
