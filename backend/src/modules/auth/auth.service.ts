@@ -2,6 +2,7 @@ import prisma from '../../config/prisma';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
+import AppError from '../../errors/AppError';
 
 export const loginUserService = async (payload: { email: string, password: string }) => {
 
@@ -20,7 +21,7 @@ export const loginUserService = async (payload: { email: string, password: strin
     const isPasswordMatched = await bcrypt.compare(payload.password, user.password);
 
     if (!isPasswordMatched)
-        throw new Error("Invalid username or password")
+        throw new AppError(401, "Invalid username or password")
 
     // provide token to user who had logged in
     const accessToken = jwt.sign(

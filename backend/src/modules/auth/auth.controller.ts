@@ -1,10 +1,13 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { getMeService, loginUserService, logoutService, refreshTokenService } from "./auth.service";
+import catchAsync from "../../common/utils/catchAsync";
 
-export const loginController = async(req: Request, res: Response) => {
-    const result = await loginUserService(req.body);
-    res.json(result);
-}
+export const loginController = catchAsync(
+    async (req: Request, res: Response) => {
+        const result = await loginUserService(req.body);
+        res.json(result);
+    }
+)
 
 export const refreshTokenController = async(req: Request, res: Response) => {
     const result = await refreshTokenService();
@@ -17,6 +20,8 @@ export const logoutController = async(req: Request, res: Response) => {
 }
 
 export const getMeController = async(req: Request, res: Response) => {
-    const result = await getMeService();
-    res.json(result);
+    res.json({
+        message: "Authorized user",
+        user: req.user
+    });
 }
