@@ -1,16 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
+import AppError from '../../errors/AppError';
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 
-const auth = async (
+const authMiddleware = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
-    const token = req.headers.authorization;
+    const token = req.headers.authorization?.split(" ")[1];
 
     if (!token)
-        throw new Error("Unauthorized")
+        throw new AppError(401, "Unauthorized Access");
 
     const decoded = jwt.verify(
         token,
@@ -22,4 +23,4 @@ const auth = async (
     next();
 }
 
-export default auth;
+export default authMiddleware;

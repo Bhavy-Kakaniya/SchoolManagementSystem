@@ -1,6 +1,6 @@
 // this file is for seeding all the data when there is nothing in database or in case of reset, to avoid inserting data manually
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, RoleName } from '@prisma/client';
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
 import bcrypt from 'bcryptjs';
@@ -19,33 +19,53 @@ const prisma = new PrismaClient({ adapter });
 
 async function main() {
 
-    const school = await prisma.school.create({
-        data: {
+    const school = await prisma.school.upsert({
+        where: {
+            name: "Darshan School",
+            slug: "darshan"
+        },
+        update: {},
+        create: {
             name: "Darshan School",
             slug: "darshan"
         }
     })
 
-    const super_admin_role = await prisma.role.upsert({ // upsert to prevent duplication error
-        where: {
-            name: "SUPER_ADMIN"
-        },
-        update: {},
-        create: {
-            name: "SUPER_ADMIN"
-        }
+    const roles = [
+        RoleName.ADMIN,
+        RoleName.PARENT,
+        RoleName.PRINCIPAL,
+        RoleName.STUDENT,
+        RoleName.TEACHER
+    ]
+
+    for (const role of roles) {
+        await prisma.role.upsert({
+            where: { name: role },
+            update: {},
+            create: { name: role }
+        });
+    }
+
+    const admin_role = await prisma.role.findUnique({
+        where: { name: RoleName.ADMIN }
     })
 
-    const school_admin_role = await prisma.role.create({
-        data: {
-            name: "SCHOOL_ADMIN"
-        }
-    })
+    if (!admin_role) {
+        throw new Error("ADMIN role not found");
+    }
 
     const hashed_password = await bcrypt.hash("admin123", 10);
 
-    const admin_user = await prisma.user.create({
-        data: {
+    const admin_user = await prisma.user.upsert({
+        where: {
+            schoolId_email: {
+                schoolId: school.id,
+                email: "admin@darshan.com",
+            }
+        },
+        update: {},
+        create: {
             schoolId: school.id,
             name: "Main Admin",
             email: "admin@darshan.com",
@@ -53,11 +73,15 @@ async function main() {
         }
     })
 
-    await prisma.userRole.create({
-        data: {
-            userId: admin_user.id,
-            roleId: school_admin_role.id
-        }
+    await prisma.userRole.upsert({
+        where: {
+            userId_roleId: {
+                userId: admin_user.id,
+                roleId: admin_role.id
+            }
+        },
+        update: {},
+        create: { userId: admin_user.id, roleId: admin_role.id }
     })
 
     console.log("data seed completed");
