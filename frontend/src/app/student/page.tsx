@@ -1,8 +1,8 @@
-export default function adminPage() {
+export default function studentPage() {
     return (
         <>
             <div className="bg-red-400">
-                admin page
+                student page
             </div>
         </>
     )

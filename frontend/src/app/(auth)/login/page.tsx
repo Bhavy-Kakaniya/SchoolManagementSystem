@@ -1,38 +1,79 @@
 "use client"
 
-import InputFieldTag from "@/components/InputField"; 
+import { api } from '@/lib/api';
+import { useRouter } from 'next/navigation';
+import InputFieldTag from "@/components/InputField";
 import Link from "next/link";
 import Lock from '@mui/icons-material/Lock';
 import Visibility from '@mui/icons-material/Visibility';
 import Email from '@mui/icons-material/Email';
-import { useState } from "react";
+import React, { useState } from "react";
 import { IconButton } from "@mui/material";
 import { VisibilityOff } from "@mui/icons-material";
 
 export default function LoginPage() {
-    const loginButtonClass = "cursor-pointer text-white font-bold ease-in-out rounded-2xl bg-linear-to-br from-green-400 to-blue-600 hover:bg-linear-to-bl focus:outline-none rounded-base text-sm px-20 py-2.5 text-center";
+    const class1 = "min-h-screen bg-blue-500 flex flex-col items-center justify-center"
+    const class2 = "w-[90%] p-2"
+    const class3 = "text-5xl text-center p-2 rounded-t-md bg-amber-400"
+    const class4 = "bg-amber-100 p-4 rounded-b-md w-fit"
+    const class5 = "text-right p-2 text-blue-800 underline"
+    const class6 = "flex align-center justify-center"
+    const class7 = "cursor-pointer text-white font-bold ease-in-out rounded-2xl bg-linear-to-br from-green-400 to-blue-600 hover:bg-linear-to-bl focus:outline-none rounded-base text-sm px-20 py-2.5 text-center hover:px-17"
+
+    const router = useRouter();
 
     // manage password visibility state
     const [showPassword, setShowPassword] = useState<boolean>(false)
-    const [inputValue, setInputValue] = useState<String>("")
+    const [inputValue, setInputValue] = useState<string>("")
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        setInputValue(e.target.value)
+    const [email, setEmail] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+
+    const handleEmailInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        setEmail(e.target.value);
+    }
+    const handlePasswordInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        setPassword(e.target.value);
+    }
+    const handleShowPassword = (): void => {
+        setShowPassword(previous_state => !previous_state);
     }
 
-    const handleShowPassword = (): void => {
-        setShowPassword((previous_state) => !previous_state);
+    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        const data = await api('/auth/login', {
+            method: 'POST',
+            body: JSON.stringify({ email, password })
+        });
+
+        localStorage.setItem("token", data.accessToken);
+
+        const roledata = await api('/auth/me', {
+            method: 'GET',
+        })
+
+        const role = roledata.rolesArray[0];
+
+        console.log("role", role)
+        // router.push(`/${role.toLowerCase()}`)
+        if (role === 'ADMIN') {
+            router.push('/admin');
+        }
+        // console.log(data);
+        // console.log(roledata);
+
     }
 
     return (
         <>
             {/* right */}
-            <div className="min-h-screen bg-blue-500 flex flex-col items-center justify-center">
-                <div className="w-[90%] p-2">
-                    <div className="text-5xl text-center p-2 rounded-t-md bg-amber-400">Login</div>
-                    <div className="bg-amber-100 p-4 rounded-b-md w-fit">
+            <div className={class1}>
+                <div className={class2}>
+                    <div className={class3}>Login</div>
+                    <div className={class4}>
 
-                        <form>
+                        <form onSubmit={handleLogin}>
 
                             <div className="m-2">
 
@@ -43,6 +84,8 @@ export default function LoginPage() {
                                     margin="dense"
                                     color="secondary"
                                     width="480px"
+                                    value={email}
+                                    onChange={handleEmailInputChange}
                                     startIcon={<Email className="text-[#232323] m-1" />}
                                 />
 
@@ -53,8 +96,8 @@ export default function LoginPage() {
                                     width="480px"
                                     margin="dense"
                                     color="secondary"
-                                    value={inputValue}
-                                    onChange={handleInputChange}
+                                    value={password}
+                                    onChange={handlePasswordInputChange}
                                     startIcon={<Lock className="text-[#232323] m-1" />}
                                     endIcon={
                                         <IconButton
@@ -69,13 +112,13 @@ export default function LoginPage() {
 
                             </div>
 
-                            <div className="text-right p-2 text-blue-800 underline">
+                            <div className={class5}>
                                 <Link href="/reset">Forgot Password?</Link>
                             </div>
 
                             <div>
-                                <div className="flex align-center justify-center">
-                                    <button type="button" className="cursor-pointer text-white font-bold ease-in-out rounded-2xl bg-linear-to-br from-green-400 to-blue-600 hover:bg-linear-to-bl focus:outline-none rounded-base text-sm px-20 py-2.5 text-center hover:px-17">Login</button>
+                                <div className={class6}>
+                                    <button type="submit" className={class7}>Login</button>
                                 </div>
                             </div>
 
@@ -86,6 +129,4 @@ export default function LoginPage() {
             </div>
         </>
     )
-}  
-
-// https://www.google.com/search?newwindow=1&sca_esv=78ed2d1ec9f8904c&rlz=1C1CHBF_enIN1113IN1113&udm=2&fbs=ADc_l-aN0CWEZBOHjofHoaMMDiKpaEWjvZ2Py1XXV8d8KvlI3sbM0Xv-BZKE_VrZb6-djVgPsTSy5UjazDfPq8BLa8BriI08eYAyMPM-9LNl6snbW_yG33vd5kd7YGQszX_cbkaDseZZZQ4GJmswgKnVwR-BbFIQ4ksHjYk73mHmEeQacRsvQm4-5-e26BJ6LRr1xFgGV_ekSmQjvkNKKw4olJHuHx0Lcw&q=login+page+school+erp&sa=X&ved=2ahUKEwjTxL_Vuq6UAxU5kVYBHQxPEPoQtKgLegQIFBAB&biw=1536&bih=730&dpr=1.25#sv=CAMSVhoyKhBlLXNQVlVQRDJNNVkwOXlNMg5zUFZVUEQyTTVZMDl5TToOd3dKMWpaTjNnU2VsM00gBCocCgZtb3NhaWMSEGUtc1BWVVBEMk01WTA5eU0YADABGAcgr635qw1KCBABGAEgASgB
+}

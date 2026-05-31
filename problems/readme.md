@@ -11,3 +11,7 @@ problem solved :
 # 3. Problem in using req.user in Express Middleware
 -> Problem: TypeScript showed an error because the default Express Request type does not contain a user property.
 -> Solution: Extended the Express Request interface using declaration merging (index.d.ts) so TypeScript recognizes req.user added by the authentication middleware.
+
+# 4. Getting error NextRouter was not mounted
+-> Problem: I was trying to use useRouter() hook from next/router inside app directory, as the App Router's useRouter() from next/navigation has different behavior to the useRouter hook in pages.
+-> Solution: changed import from next/router to next/navigation.
