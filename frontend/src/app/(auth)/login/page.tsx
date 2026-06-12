@@ -7,7 +7,7 @@ import Link from "next/link";
 import Lock from '@mui/icons-material/Lock';
 import Visibility from '@mui/icons-material/Visibility';
 import Email from '@mui/icons-material/Email';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IconButton } from "@mui/material";
 import { VisibilityOff } from "@mui/icons-material";
 
@@ -39,19 +39,44 @@ export default function LoginPage() {
         setShowPassword(previous_state => !previous_state);
     }
 
+    useEffect(() => {
+        const checkUser = async () => {
+            try {
+                const token = localStorage.getItem("accessToken");
+
+                if (!token) return;
+
+                const userData = await api("/auth/me");
+                const role = userData?.rolesArray?.[0];
+
+                const roleRoutes: Record<string, string> = {
+                    ADMIN: "/admin",
+                    PRINCIPAL: "/principal",
+                    TEACHER: "/teacher",
+                    STUDENT: "/student",
+                    PARENT: "/parent",
+                };
+                if (roleRoutes[role])
+                    router.replace(roleRoutes[role]);
+
+            } catch {
+                localStorage.removeItem("accessToken");
+            }
+        };
+
+        checkUser();
+    }, [router]);
+
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const data = await api('/auth/login', {
-            method: 'POST',
-            body: JSON.stringify({ email, password })
+        const data = await api("/auth/login", {
+            method: "POST",
+            body: JSON.stringify({ email, password }),
         });
 
         localStorage.setItem("accessToken", data.accessToken);
-
-        const roledata = await api('/auth/me', {
-            method: 'GET',
-        })
+        const roleData = await api("/auth/me");
 
         const roleRoutes: Record<string, string> = {
             ADMIN: "/admin",
@@ -61,10 +86,8 @@ export default function LoginPage() {
             PARENT: "/parent",
         };
 
-        const role = roledata.rolesArray[0];
-
+        const role = roleData.rolesArray?.[0];
         router.push(roleRoutes[role] || "/unauthorized");
-
     }
 
     return (

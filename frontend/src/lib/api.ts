@@ -14,5 +14,9 @@ export const api = async (enpoint: string, options?: RequestInit) => {
             }
         }
     )
-    return response.json()
+    const data = await response.json();
+    if(!response.ok) 
+        throw new Error(data.message || "Request Failed");
+
+    return data;
 }
