@@ -47,21 +47,23 @@ export default function LoginPage() {
             body: JSON.stringify({ email, password })
         });
 
-        localStorage.setItem("token", data.accessToken);
+        localStorage.setItem("accessToken", data.accessToken);
 
         const roledata = await api('/auth/me', {
             method: 'GET',
         })
 
+        const roleRoutes: Record<string, string> = {
+            ADMIN: "/admin",
+            PRINCIPAL: "/principal",
+            TEACHER: "/teacher",
+            STUDENT: "/student",
+            PARENT: "/parent",
+        };
+
         const role = roledata.rolesArray[0];
 
-        console.log("role", role)
-        // router.push(`/${role.toLowerCase()}`)
-        if (role === 'ADMIN') {
-            router.push('/admin');
-        }
-        // console.log(data);
-        // console.log(roledata);
+        router.push(roleRoutes[role] || "/unauthorized");
 
     }
 
