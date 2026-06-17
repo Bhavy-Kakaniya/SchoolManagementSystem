@@ -28,11 +28,11 @@ export const loginUserService = async (payload: { email: string, password: strin
         {
             userId: user.id,
             email: user.email,
-            // roles: user.roles, add this later after setup is complete
+            schoolId: user.schoolId
         },
         process.env.JWT_SECRET_KEY!,
         {
-            expiresIn: "15d" as const,
+            expiresIn: "15d"
         }
     );
 

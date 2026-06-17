@@ -9,6 +9,7 @@ declare global {
             user?: JwtPayload & {
                 userId: string;
                 email: string;
+                schoolId: string;
             }
         }
     }

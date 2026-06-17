@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-    provider = "postgresql"
+    provider  = "postgresql"
 }
 
 model User {
@@ -39,6 +39,7 @@ model Student {
     id            String        @id @default(uuid())
     userId        String        @unique
     schoolId      String
+    admissionNo   String
     firstName     String
     lastName      String
     gender        Gender
@@ -54,7 +55,7 @@ model Student {
     user          User          @relation(fields: [userId], references: [id])
     enrollments   Enrollment[]
 
-    @@unique([schoolId, phone])
+    @@unique([schoolId, admissionNo])
 }
 
 model AcademicYear {

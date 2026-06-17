@@ -22,24 +22,24 @@ export const requireRoles = (...roles: RoleName[]) => {
     ) => {
 
         if (!req.user)
-            return res.status(401).json({ message: "unauthorized" })
+            return res.status(401).json({ message: "unauthorized" });
 
         const user = await prisma.user.findUnique({
             where: { id: req.user.userId, },
             include: { roles: { include: { role: true } } }
-        })
+        });
 
         if (!user) // valid jwt may exists while user was deleted from DB
-            res.status(401).json({ message: "user not found" })
+            return res.status(401).json({ message: "user not found" });
 
         // simplify user.roles[0].role.name to ['STUDENT', 'TEACHER']
-        const userRolesArray = user?.roles.map(userRole => userRole.role.name)
+        const userRolesArray = user.roles.map(userRole => userRole.role.name);
 
         // check whether user is having any role
-        const hasRoles = roles.some(role => userRolesArray?.includes(role))
+        const hasRoles = roles.some(role => userRolesArray?.includes(role));
 
         if (!hasRoles)
-            return res.status(403).json({ message: "Forbidden" })
+            return res.status(403).json({ message: "Forbidden" });
 
         next();
 
