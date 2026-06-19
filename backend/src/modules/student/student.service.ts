@@ -115,3 +115,16 @@ export const getStudentsService = async (schoolId: string, page: number, limit: 
         pagination: { page, limit, total, totalPages: Math.ceil(total / limit) }
     }
 }
+
+export const getStudentByIdService = async (schoolId: string, studentId: string) => {
+    // find unique will require to check if student's school id is same as original school id
+    // so that no admin of school can view student of other school
+    const student = await prisma.student.findFirst({
+        where: { id: studentId, schoolId },
+        include: { user: { select: { id: true, email: true, name: true } } }
+    });
+
+    if(!student) throw new AppError(404, "Student not found");
+
+    return student;
+}

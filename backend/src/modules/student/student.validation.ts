@@ -17,3 +17,5 @@ export const createStudentSchema = z.object({
     bloodGroup: z.string().optional(),
     address: z.string().optional()
 });
+
+export const studentIdParamSchema = z.object({ id: z.uuid() });

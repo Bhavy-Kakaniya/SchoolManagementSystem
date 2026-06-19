@@ -8,16 +8,11 @@ export const loginUserService = async (payload: { email: string, password: strin
 
     // later also use school id for query so that find unique can be used and also it will
     //  allow 1 person working in more schools logic (tenant architecture).
-    const user = await prisma.user.findFirst({
-        where: {
-            email: payload.email,
-        },
-    });
+    const user = await prisma.user.findFirst({ where: { email: payload.email } });
 
     if (!user)
         throw new Error("User not found");
 
-    // check password
     const isPasswordMatched = await bcrypt.compare(payload.password, user.password);
 
     if (!isPasswordMatched)

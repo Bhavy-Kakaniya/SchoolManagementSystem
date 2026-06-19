@@ -21,23 +21,17 @@ async function main() {
 
     const school = await prisma.school.upsert({
         where: {
-            name: "Darshan School",
-            slug: "darshan"
+            name: "Modi School",
+            slug: "modi"
         },
         update: {},
         create: {
-            name: "Darshan School",
-            slug: "darshan"
+            name: "Modi School",
+            slug: "modi"
         }
     })
 
-    const roles = [
-        RoleName.ADMIN,
-        RoleName.PARENT,
-        RoleName.PRINCIPAL,
-        RoleName.STUDENT,
-        RoleName.TEACHER
-    ]
+    const roles = Object.values(RoleName);
 
     for (const role of roles) {
         await prisma.role.upsert({
@@ -61,14 +55,14 @@ async function main() {
         where: {
             schoolId_email: {
                 schoolId: school.id,
-                email: "admin@darshan.com",
+                email: "admin@modi.com",
             }
         },
         update: {},
         create: {
             schoolId: school.id,
             name: "Main Admin",
-            email: "admin@darshan.com",
+            email: "admin@modi.com",
             password: hashed_password
         }
     })
@@ -84,7 +78,38 @@ async function main() {
         create: { userId: admin_user.id, roleId: admin_role.id }
     })
 
-    console.log("data seed completed");
+    const platformSchool = await prisma.school.upsert({
+        where: { slug: "platform" },
+        update: {},
+        create: { name: "Platform", slug: "platform" }
+    });
+
+    const superAdminRole = await prisma.role.findUnique({
+        where: { name: RoleName.SUPER_ADMIN }
+    })
+
+    if (!superAdminRole) throw new Error("super admin role not found");
+
+    const superAdminHashedPassword = await bcrypt.hash("superadmin123", 10);
+
+    const superAdminUser = await prisma.user.upsert({
+        where: {
+            schoolId_email: { schoolId: platformSchool.id, email: "superadmin@sms.com" }
+        },
+        update: {},
+        create: {
+            schoolId: platformSchool.id,
+            name: "Super Admin",
+            email: "superadmin@sms.com",
+            password: superAdminHashedPassword
+        }
+    });
+
+    await prisma.userRole.upsert({
+        where: { userId_roleId: { userId: superAdminUser.id, roleId: superAdminRole.id } },
+        update: {},
+        create: {userId: superAdminUser.id, roleId: superAdminRole.id}
+    })
 }
 
 main()
