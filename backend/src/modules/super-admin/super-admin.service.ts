@@ -8,7 +8,7 @@ import AppError from '../../errors/AppError';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 
-export const createSchoolService = async (schoolId: string, data: { name: string, email: string }) => {
+export const createSchoolAdminService = async (schoolId: string, data: { name: string, email: string }) => {
     const [school, adminRole, existingUser] = await Promise.all([
         prisma.school.findUnique({ where: { id: schoolId } }),
         prisma.role.findUnique({ where: { name: RoleName.ADMIN } }),
