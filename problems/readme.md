@@ -15,3 +15,7 @@ problem solved :
 # 4. Getting error NextRouter was not mounted
 -> Problem: I was trying to use useRouter() hook from next/router inside app directory, as the App Router's useRouter() from next/navigation has different behavior to the useRouter hook in pages.
 -> Solution: changed import from next/router to next/navigation.
+
+# 5. Error squiggle in status in controller though there was no syntax problem.
+-> Problem: No error in service but still getting error in controller in status code despite everything was working.
+-> Solution: I forgot to import Request and Response from express and started coding controller directly so simply imported them and the error was solved.
