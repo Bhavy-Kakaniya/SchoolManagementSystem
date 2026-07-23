@@ -1,0 +1,1 @@
+User clicks "Create Student" -> Next.js Page -> React Component -> API Client -> Express Route -> Authentication middleware  ->  Authorization Middleware  ->  Validation   ->  Controller  -> Service -> Prisma -> PostgreSQL -> Response -> Frontend State Update -> UI Re-render
