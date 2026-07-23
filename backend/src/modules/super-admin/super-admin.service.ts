@@ -2,11 +2,13 @@
 // Hash password -> Transaction -> Create User
 //                              -> Assign ADMIN role -> Return temp password
 
-import { RoleName } from '@prisma/client';
+import { Prisma, RoleName } from '@prisma/client';
 import prisma from '../../config/prisma';
 import AppError from '../../errors/AppError';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
+import { GetSchoolsQuery } from './super-admin.validation';
+import { success } from 'zod';
 
 export const createSchoolAdminService = async (schoolId: string, data: { name: string, email: string }) => {
     const [school, adminRole, existingUser] = await Promise.all([
@@ -52,4 +54,36 @@ export const createSchoolAdminService = async (schoolId: string, data: { name: s
         admin: result,
         temporaryPassword
     }
+}
+
+export const getSchoolsService = async (query: GetSchoolsQuery) => {
+    const skip = (query.page - 1) * query.limit;
+
+    const where: Prisma.SchoolWhereInput = { // to avoid where error due to type script
+        OR: [
+            { name: { contains: query.search, mode: "insensitive" } },
+            { slug: { contains: query.search, mode: "insensitive" } }
+        ]
+    };
+
+    const [total, schools] = await Promise.all([
+        prisma.school.count({ where }),
+        prisma.school.findMany({
+            where, // this will return what is searched not its slug
+            skip,
+            take: query.limit
+        })
+    ]);
+
+    return {
+        success: true,
+        message: "Schools fetched successfully",
+        data: schools,
+        pagination: {
+            page: query.page,
+            limit: query.limit,
+            total,
+            totalPages: Math.ceil(total / query.limit)
+        }
+    };
 }
