@@ -9,14 +9,14 @@ export const schoolIdParamsSchema = z.object({
     schoolId: z.uuid()
 });
 
-export const getSchoolsSchema = z.object({
+export const getAllSchoolsSchema = z.object({
     // coerce will convert string to number because the query parameter will be needed to changed integer
     page: z.coerce.number().int().min(1).default(1),
     limit: z.coerce.number().int().min(1).max(100).default(10),
     search: z.string().trim().default("")
 });
 
-export type getSchoolsQuery = z.infer<typeof getSchoolsSchema>; // this can be used in service for parameters
+export type getSchoolsQuery = z.infer<typeof getAllSchoolsSchema>; // this can be used in service for parameters
 
 export const getSchoolByIdSchema = z.object({
     schoolId: z.uuid()

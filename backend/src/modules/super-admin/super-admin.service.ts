@@ -55,10 +55,11 @@ export const createSchoolAdminService = async (schoolId: string, data: { name: s
     }
 };
 
-export const getSchoolsService = async (query: getSchoolsQuery) => {
+export const getAllSchoolsService = async (query: getSchoolsQuery) => {
     const skip = (query.page - 1) * query.limit;
 
     const where: Prisma.SchoolWhereInput = { // to avoid where error due to type script
+        deletedAt: null,
         OR: [
             { name: { contains: query.search, mode: "insensitive" } },
             { slug: { contains: query.search, mode: "insensitive" } }
@@ -88,7 +89,7 @@ export const getSchoolsService = async (query: getSchoolsQuery) => {
 }
 
 export const getSchoolByIdService = async (schoolId: string) => {
-    const school = await prisma.school.findUnique({ where: { id: schoolId } });
+    const school = await prisma.school.findUnique({ where: { id: schoolId, deletedAt: null } });
     if (!school) {
         throw new AppError(404, "School not found")
     }
@@ -106,17 +107,18 @@ export const getSchoolByIdService = async (schoolId: string) => {
 };
 
 export const updateSchoolService = async (schoolId: string, data: updateSchoolBody) => {
-    const school = await prisma.school.findUnique({ where: { id: schoolId } });
+    const school = await prisma.school.findFirst({ where: { id: schoolId, deletedAt: null } });
 
     if (!school) {
         throw new AppError(404, "School not found");
     }
-    const exisitingSchool = await prisma.school.findFirst({ where: { slug: data.slug, NOT: { id: schoolId } } });
+    const exisitingSchool = await prisma.school.findFirst({ where: { slug: data.slug, deletedAt: null, NOT: { id: schoolId } } });
 
     if (exisitingSchool) {
         throw new AppError(409, "Slug already exists");
     }
     const updatedSchool = await prisma.school.update({ where: { id: schoolId }, data });
+
     return {
         success: true,
         message: "School updated successfully",
@@ -128,4 +130,22 @@ export const updateSchoolService = async (schoolId: string, data: updateSchoolBo
             createdAt: updatedSchool.createdAt
         }
     };
+};
+
+export const softDeleteSchoolService = async (schoolId: string) => {
+    try { // try catch will send proper message to frontend not prisma error if a wrong id is entered
+        await prisma.school.update({
+            where: { id: schoolId, deletedAt: null }, data: { deletedAt: new Date() }
+        });
+
+        return {
+            success: true,
+            message: "School deleted successfully"
+        };
+    } catch (err) {
+        if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2025") {
+            throw new AppError(404, "School not found");
+        }
+        throw err;
+    }
 };
