@@ -5,10 +5,6 @@ export const createSchoolAdminSchema = z.object({
     email: z.email()
 });
 
-export const schoolIdParamsSchema = z.object({
-    schoolId: z.uuid()
-});
-
 export const getAllSchoolsSchema = z.object({
     // coerce will convert string to number because the query parameter will be needed to changed integer
     page: z.coerce.number().int().min(1).default(1),
@@ -17,16 +13,6 @@ export const getAllSchoolsSchema = z.object({
 });
 
 export type getSchoolsQuery = z.infer<typeof getAllSchoolsSchema>; // this can be used in service for parameters
-
-export const getSchoolByIdSchema = z.object({
-    schoolId: z.uuid()
-});
-
-export type getSchoolByIdParams = z.infer<typeof getSchoolByIdSchema>;
-
-export const updateSchoolParamsSchema = z.object({
-    schoolId: z.uuid()
-});
 
 export const updateSchoolSchema = z.object({
     name: z.string().min(2).max(100),

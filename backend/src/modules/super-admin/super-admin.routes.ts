@@ -1,6 +1,6 @@
 import { RoleName } from "@prisma/client";
 import { Router } from "express";
-import { createSchoolAdminController, getAllSchoolsController, getSchoolByIdController, softDeleteSchoolController, updateSchoolController } from "./super-admin.controller";
+import { createSchoolAdminController, getAllSchoolsController, getSchoolByIdController, restoreSchoolController, softDeleteSchoolController, updateSchoolController } from "./super-admin.controller";
 import authMiddleware from '../../common/middleware/auth.middleware';
 import { requireRoles } from '../../common/middleware/authorization.middleware';
 import { createSchoolController } from "../school/school.controller";
@@ -13,5 +13,6 @@ router.get('/schools', authMiddleware, requireRoles(RoleName.SUPER_ADMIN), getAl
 router.get('/schools/:schoolId', authMiddleware, requireRoles(RoleName.SUPER_ADMIN), getSchoolByIdController);
 router.put('/schools/:schoolId', authMiddleware, requireRoles(RoleName.SUPER_ADMIN), updateSchoolController);
 router.delete('/schools/:schoolId', authMiddleware, requireRoles(RoleName.SUPER_ADMIN), softDeleteSchoolController);
+router.patch("/schools/:schoolId/restore", authMiddleware, requireRoles(RoleName.SUPER_ADMIN), restoreSchoolController);
 
 export default router;

@@ -149,3 +149,20 @@ export const softDeleteSchoolService = async (schoolId: string) => {
         throw err;
     }
 };
+
+export const restoreSchoolService = async (schoolId: string) => {
+    try {
+        await prisma.school.update({
+            where: { id: schoolId, NOT: { deletedAt: null } }, data: { deletedAt: null }
+        });
+        return {
+            success: true,
+            message: "School restored successfully"
+        };
+    } catch (err) {
+        if(err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2025"){
+            throw new AppError(404, "School not found");
+        }
+        throw err;
+    }
+};
