@@ -16,10 +16,21 @@ export const getSchoolsSchema = z.object({
     search: z.string().trim().default("")
 });
 
-export type GetSchoolsQuery = z.infer<typeof getSchoolsSchema>; // this can be used in service for parameters
+export type getSchoolsQuery = z.infer<typeof getSchoolsSchema>; // this can be used in service for parameters
 
 export const getSchoolByIdSchema = z.object({
     schoolId: z.uuid()
 });
 
 export type getSchoolByIdParams = z.infer<typeof getSchoolByIdSchema>;
+
+export const updateSchoolParamsSchema = z.object({
+    schoolId: z.uuid()
+});
+
+export const updateSchoolSchema = z.object({
+    name: z.string().min(2).max(100),
+    slug: z.string().min(2).max(50).regex(/^[a-z0-9-]+$/)
+});
+
+export type updateSchoolBody = z.infer<typeof updateSchoolSchema>;

@@ -7,7 +7,7 @@ import prisma from '../../config/prisma';
 import AppError from '../../errors/AppError';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
-import { GetSchoolsQuery } from './super-admin.validation';
+import { getSchoolsQuery, updateSchoolBody } from './super-admin.validation';
 
 export const createSchoolAdminService = async (schoolId: string, data: { name: string, email: string }) => {
     const [school, adminRole, existingUser] = await Promise.all([
@@ -55,7 +55,7 @@ export const createSchoolAdminService = async (schoolId: string, data: { name: s
     }
 };
 
-export const getSchoolsService = async (query: GetSchoolsQuery) => {
+export const getSchoolsService = async (query: getSchoolsQuery) => {
     const skip = (query.page - 1) * query.limit;
 
     const where: Prisma.SchoolWhereInput = { // to avoid where error due to type script
@@ -101,6 +101,31 @@ export const getSchoolByIdService = async (schoolId: string) => {
             slug: school.slug,
             logo: school.logo,
             createdAt: school.createdAt
+        }
+    };
+};
+
+export const updateSchoolService = async (schoolId: string, data: updateSchoolBody) => {
+    const school = await prisma.school.findUnique({ where: { id: schoolId } });
+
+    if (!school) {
+        throw new AppError(404, "School not found");
+    }
+    const exisitingSchool = await prisma.school.findFirst({ where: { slug: data.slug, NOT: { id: schoolId } } });
+
+    if (exisitingSchool) {
+        throw new AppError(409, "Slug already exists");
+    }
+    const updatedSchool = await prisma.school.update({ where: { id: schoolId }, data });
+    return {
+        success: true,
+        message: "School updated successfully",
+        data: {
+            id: updatedSchool.id,
+            name: updatedSchool.name,
+            slug: updatedSchool.slug,
+            logo: updatedSchool.logo,
+            createdAt: updatedSchool.createdAt
         }
     };
 };

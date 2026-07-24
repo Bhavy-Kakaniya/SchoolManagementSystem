@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { createSchoolAdminSchema, getSchoolByIdSchema, getSchoolsSchema, schoolIdParamsSchema } from './super-admin.validation';
-import { createSchoolAdminService, getSchoolByIdService, getSchoolsService } from './super-admin.service';
+import { createSchoolAdminSchema, getSchoolByIdSchema, getSchoolsSchema, schoolIdParamsSchema, updateSchoolParamsSchema, updateSchoolSchema } from './super-admin.validation';
+import { createSchoolAdminService, getSchoolByIdService, getSchoolsService, updateSchoolService } from './super-admin.service';
 
 export const createSchoolAdminController = async (req: Request, res: Response) => {
     const validateData = createSchoolAdminSchema.parse(req.body);
@@ -24,3 +24,10 @@ export const getSchoolByIdController = async (req: Request, res: Response) => {
     const result = await getSchoolByIdService(schoolId);
     res.status(200).json(result);
 };
+
+export const updateSchoolController = async (req: Request, res: Response) => {
+    const { schoolId } = updateSchoolParamsSchema.parse(req.params);
+    const body = updateSchoolSchema.parse(req.body);
+    const result = await updateSchoolService(schoolId, body);
+    res.status(200).json(result);
+}
