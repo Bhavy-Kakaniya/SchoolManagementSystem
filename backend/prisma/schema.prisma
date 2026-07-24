@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-    provider  = "postgresql"
+    provider = "postgresql"
 }
 
 model User {
@@ -15,7 +15,7 @@ model User {
     createdAt DateTime   @default(now())
     student   Student?
     roles     UserRole[]
-    school    School?     @relation(fields: [schoolId], references: [id])
+    school    School?    @relation(fields: [schoolId], references: [id])
 
     @@unique([schoolId, email]) // if a parent is working in 2 school then it will be helpful following tenant architecture 
 }
@@ -118,6 +118,7 @@ model School {
     slug          String         @unique
     logo          String?
     createdAt     DateTime       @default(now())
+    deletedAt     DateTime?
     users         User[]
     classes       SchoolClass[]
     sections      Section[]
