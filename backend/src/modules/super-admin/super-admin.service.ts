@@ -8,7 +8,6 @@ import AppError from '../../errors/AppError';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import { GetSchoolsQuery } from './super-admin.validation';
-import { success } from 'zod';
 
 export const createSchoolAdminService = async (schoolId: string, data: { name: string, email: string }) => {
     const [school, adminRole, existingUser] = await Promise.all([
@@ -54,7 +53,7 @@ export const createSchoolAdminService = async (schoolId: string, data: { name: s
         admin: result,
         temporaryPassword
     }
-}
+};
 
 export const getSchoolsService = async (query: GetSchoolsQuery) => {
     const skip = (query.page - 1) * query.limit;
@@ -87,3 +86,21 @@ export const getSchoolsService = async (query: GetSchoolsQuery) => {
         }
     };
 }
+
+export const getSchoolByIdService = async (schoolId: string) => {
+    const school = await prisma.school.findUnique({ where: { id: schoolId } });
+    if (!school) {
+        throw new AppError(404, "School not found")
+    }
+    return {
+        success: true,
+        message: "School fetched successfully",
+        data: {
+            id: school.id,
+            name: school.name,
+            slug: school.slug,
+            logo: school.logo,
+            createdAt: school.createdAt
+        }
+    };
+};

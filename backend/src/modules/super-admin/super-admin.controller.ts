@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { createSchoolAdminSchema, getSchoolsSchema, schoolIdParamsSchema } from './super-admin.validation';
-import { createSchoolAdminService, getSchoolsService } from './super-admin.service';
+import { createSchoolAdminSchema, getSchoolByIdSchema, getSchoolsSchema, schoolIdParamsSchema } from './super-admin.validation';
+import { createSchoolAdminService, getSchoolByIdService, getSchoolsService } from './super-admin.service';
 
 export const createSchoolAdminController = async (req: Request, res: Response) => {
     const validateData = createSchoolAdminSchema.parse(req.body);
@@ -16,5 +16,11 @@ export const getSchoolsController = async (req: Request, res: Response) => {
     // GET /super-admin/schools?search=MODI
     const query = getSchoolsSchema.parse(req.query);
     const result = await getSchoolsService(query);
+    res.status(200).json(result);
+};
+
+export const getSchoolByIdController = async (req: Request, res: Response) => {
+    const { schoolId } = getSchoolByIdSchema.parse(req.params);
+    const result = await getSchoolByIdService(schoolId);
     res.status(200).json(result);
 };

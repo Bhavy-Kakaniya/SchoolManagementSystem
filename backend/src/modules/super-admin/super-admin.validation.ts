@@ -17,3 +17,9 @@ export const getSchoolsSchema = z.object({
 });
 
 export type GetSchoolsQuery = z.infer<typeof getSchoolsSchema>; // this can be used in service for parameters
+
+export const getSchoolByIdSchema = z.object({
+    schoolId: z.uuid()
+});
+
+export type getSchoolByIdParams = z.infer<typeof getSchoolByIdSchema>;
