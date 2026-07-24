@@ -1,4 +1,4 @@
-// Validate school exists -> Check email not already used in that school -> Find ADMIN role -> Generate temporary password↓
+// Validate school exists -> Check email not already used in that school -> Find ADMIN role -> Generate temporary password ->
 // Hash password -> Transaction -> Create User
 //                              -> Assign ADMIN role -> Return temp password
 
