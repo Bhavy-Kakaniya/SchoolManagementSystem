@@ -14,7 +14,7 @@ export default function adminPage() {
     return (
         <>
             <div className="bg-red-400">
-                admin page
+                super admin page
             </div>
 
             <button onClick={handleLogout} className="m-3 bg-blue-400 rounded p-2 cursor-pointer">Logout</button>
