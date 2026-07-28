@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation"
 
-export default function adminPage() {
+export default function SuperAdminPage() {
 
     const router = useRouter();
 
