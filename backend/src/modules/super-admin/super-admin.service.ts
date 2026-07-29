@@ -166,6 +166,3 @@ export const restoreSchoolService = async (schoolId: string) => {
         throw err;
     }
 };
-
-
-{ { { { { { { { { { { { { { { } } } } } } } } } } } } } } }

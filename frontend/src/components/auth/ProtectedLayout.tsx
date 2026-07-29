@@ -1,7 +1,7 @@
 "use client"
 
 import { RoleName } from "@/types/roles"
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 
 type Props = {
     allowedRoles: RoleName[],

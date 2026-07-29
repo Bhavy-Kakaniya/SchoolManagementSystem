@@ -52,7 +52,7 @@ export const useAuth = (allowedRoles: RoleName[]) => {
             }
         }
         checkAccess()
-    }, []);
-    console.log("Hook allowedRoles:", allowedRoles);
-    return { loading }
-}
+    }, [allowedRoles, router]);
+
+    return { loading };
+};

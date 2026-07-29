@@ -1,0 +1,36 @@
+import { api } from "@/lib/api";
+import { CreateSchoolDto, UpdateSchoolDto } from "@/types/school";
+
+export const getSchools = async () => {
+    return await api("/super-admin/schools");
+};
+
+export const getSchoolById = async(schoolId: string) => {
+    return await api(`/super-admin/schools/${schoolId}`);
+};
+
+export const createSchool = async (data: CreateSchoolDto) => {
+    return await api("/super-admin/schools", {
+        method: "POST",
+        body: JSON.stringify(data)
+    });
+};
+
+export const updateSchool = async(schoolId: string, data: UpdateSchoolDto) => {
+    return await api(`/super-admin/schools/${schoolId}`, {
+        method: "PUT",
+        body: JSON.stringify(data)
+    });
+};
+
+export const deleteSchool = async(schoolId: string) => {
+    return await api(`/super-admin/schools/${schoolId}`, {
+        method : "PATCH"
+    });
+};
+
+export const restoreSchool = async(schoolId:string) => {
+    return await api(`/super-admin/schools/${schoolId}/restore`, {
+        method: "PATCH"
+    });
+};
