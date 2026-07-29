@@ -10,6 +10,10 @@ import { RoleName } from "@/types/roles";
  * 4. Redirect if not ADMIN
  */
 
-export default function SuperAdminLayout({ children }: { children: React.ReactNode }) {
-    <ProtectedLayout allowedRoles={[RoleName.SUPER_ADMIN]}>{children}</ProtectedLayout>
+export default function SuperAdminLayout({ children, }: { children: React.ReactNode; }) {
+    return (
+        <ProtectedLayout allowedRoles={[RoleName.SUPER_ADMIN]}>
+            {children}
+        </ProtectedLayout>
+    );
 };

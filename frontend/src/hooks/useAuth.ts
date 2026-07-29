@@ -24,13 +24,20 @@ export const useAuth = (allowedRoles: RoleName[]) => {
     useEffect(() => {
         const checkAccess = async () => {
             try {
-                const userData = await api('/auth/me');
+                const userData = await api("/auth/me");
 
+                console.log("User Data:", userData);
+                console.log("Roles Array:", userData.rolesArray);
+                
                 const userRoles = userData.rolesArray || [];
+                console.log("Allowed Roles:", allowedRoles);
+                
+                const hasAccess = userRoles.some((role: RoleName) => {
+                    console.log("Comparing:", role, allowedRoles.includes(role));
+                    return allowedRoles.includes(role);
+                });
 
-                const hasAccess = userRoles.some((role: RoleName) =>
-                    allowedRoles.includes(role)
-                )
+                console.log("Has Access:", hasAccess);
 
                 if (!hasAccess) {
                     router.push('/unauthorized');
@@ -45,6 +52,7 @@ export const useAuth = (allowedRoles: RoleName[]) => {
             }
         }
         checkAccess()
-    }, [])
+    }, []);
+    console.log("Hook allowedRoles:", allowedRoles);
     return { loading }
 }

@@ -1,5 +1,7 @@
-import { useAuth } from "@/hooks/useAuth";
+"use client"
+
 import { RoleName } from "@/types/roles"
+import { useAuth } from "../../hooks/useAuth";
 
 type Props = {
     allowedRoles: RoleName[],
@@ -11,4 +13,4 @@ export default function ProtectedLayout({ allowedRoles, children }: Props) {
     if (loading)
         return <p>Loading...</p>
     return <>{children}</>
-}
+};

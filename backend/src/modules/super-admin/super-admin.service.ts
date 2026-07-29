@@ -160,9 +160,12 @@ export const restoreSchoolService = async (schoolId: string) => {
             message: "School restored successfully"
         };
     } catch (err) {
-        if(err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2025"){
+        if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2025") {
             throw new AppError(404, "School not found");
         }
         throw err;
     }
 };
+
+
+{ { { { { { { { { { { { { { { } } } } } } } } } } } } } } }

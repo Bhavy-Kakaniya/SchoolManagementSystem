@@ -50,7 +50,7 @@ export default function LoginPage() {
                 const role = userData?.rolesArray?.[0];
 
                 const roleRoutes: Record<string, string> = {
-                    ADMIN: "/admin",
+                    SUPER_ADMIN: "/super-admin",
                     PRINCIPAL: "/principal",
                     TEACHER: "/teacher",
                     STUDENT: "/student",
@@ -79,7 +79,7 @@ export default function LoginPage() {
         const roleData = await api("/auth/me");
 
         const roleRoutes: Record<string, string> = {
-            ADMIN: "/admin",
+            SUPER_ADMIN: "/super-admin",
             PRINCIPAL: "/principal",
             TEACHER: "/teacher",
             STUDENT: "/student",
