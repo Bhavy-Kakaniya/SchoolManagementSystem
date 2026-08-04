@@ -9,3 +9,10 @@ export interface UpdateSchoolDto {
     slug?: string;
     logo?: string;
 };
+
+export interface School{
+    id: number;
+    name: string;
+    slug: string;
+    logo?: string;
+}

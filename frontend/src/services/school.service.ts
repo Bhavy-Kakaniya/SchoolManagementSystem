@@ -2,7 +2,8 @@ import { api } from "@/lib/api";
 import { CreateSchoolDto, UpdateSchoolDto } from "@/types/school";
 
 export const getSchools = async () => {
-    return await api("/super-admin/schools");
+    const response = await api("/super-admin/schools");
+    return response.data;
 };
 
 export const getSchoolById = async(schoolId: string) => {
@@ -25,7 +26,7 @@ export const updateSchool = async(schoolId: string, data: UpdateSchoolDto) => {
 
 export const deleteSchool = async(schoolId: string) => {
     return await api(`/super-admin/schools/${schoolId}`, {
-        method : "PATCH"
+        method : "PATCH",
     });
 };
 

@@ -1,10 +1,10 @@
 const BASE_URL = "http://localhost:5000/api/v1";
 
-export const api = async (enpoint: string, options?: RequestInit) => {
+export const api = async (endpoint: string, options?: RequestInit) => {
     const token = localStorage.getItem("accessToken");
 
     const response = await fetch(
-        `${BASE_URL}${enpoint}`,
+        `${BASE_URL}${endpoint}`,
         {
             ...options,
             headers: {
