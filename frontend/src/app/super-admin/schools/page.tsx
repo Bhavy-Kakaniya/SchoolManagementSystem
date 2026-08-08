@@ -3,6 +3,7 @@
 import { getSchools } from "@/services/school.service";
 import { School } from "@/types/school";
 import { useEffect, useState } from "react";
+import SchoolTable from "@/components/school/SchoolTable";
 
 // 1. call getSchools
 // 2. store schools in states
@@ -17,15 +18,14 @@ export default function SchoolPage() {
 
     const fetchSchools = async () => {
         try {
-            const response = await getSchools();
-            setSchools(response.data);
+            const schools = await getSchools();
+            setSchools(schools);
         } catch (err) {
             console.error(err);
             if (err instanceof Error)
                 setError(err.message);
             else
                 setError("Something went wrong.")
-
         } finally {
             setLoading(false);
         }
@@ -49,14 +49,8 @@ export default function SchoolPage() {
                 {schools.length === 0 ?
                     (<p>No schools found.</p>)
                     : (
-                        <ul>
-                            {schools.map((school) => (
-                                <li key={school.id}>
-                                    {school.name}
-                                </li>
-                            ))}
-                        </ul>
-                    )}
+                        <SchoolTable schools={schools} onEdit={(school)=>{console.log("Edit: ", school)}} onDelete={(school)=>{console.log("Edit: ", school)}}/>
+                    )}  
             </div>
         </>
     );

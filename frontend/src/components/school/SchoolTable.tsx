@@ -10,10 +10,14 @@ interface SchoolTableProps {
 };
 
 export default function SchoolTable({ schools, onEdit, onDelete }: SchoolTableProps) {
+
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [selectSchool, setSelectSchool] = useState<School | null>(null);
-    const handleMenuOpen = () => {
-        const open = Boolean(anchorEl); // if null closed else open
+    const [selectedSchool, setSelectedSchool] = useState<School | null>(null);
+
+    const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, school: School) => {
+        setAnchorEl(event.currentTarget);
+        setSelectedSchool(school);
+
     }
     const handleMenuClose = () => { }
 
@@ -36,7 +40,7 @@ export default function SchoolTable({ schools, onEdit, onDelete }: SchoolTablePr
                             <TableCell>{school.logo ? ("Logo") : ("🏫")}</TableCell>
                             <TableCell>{school.name}</TableCell>
                             <TableCell>{school.slug}</TableCell>
-                            <TableCell></TableCell>
+                            <TableCell><IconButton onClick={(e) => handleMenuOpen(e, school)}><MoreVertIcon /></IconButton></TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
