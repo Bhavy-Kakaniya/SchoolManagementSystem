@@ -11,18 +11,35 @@ interface SchoolTableProps {
 
 export default function SchoolTable({ schools, onEdit, onDelete }: SchoolTableProps) {
 
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [selectedSchool, setSelectedSchool] = useState<School | null>(null);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // where sould menu appear
+    const [selectedSchool, setSelectedSchool] = useState<School | null>(null); // which school does action apply to
+
+    const open = Boolean(anchorEl);
 
     const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, school: School) => {
         setAnchorEl(event.currentTarget);
         setSelectedSchool(school);
+    };
 
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+        setSelectedSchool(null);
+    };
+
+    const handleEdit = () => {
+        if(!selectedSchool) return;
+        onEdit(selectedSchool);
+        handleMenuClose();
     }
-    const handleMenuClose = () => { }
 
-    // selectSchool = menu operating on
-    // anchorEl = where should the menu open
+    const handleDelete = () => {
+        if(!selectedSchool) return;
+        onDelete(selectedSchool);
+        handleMenuClose();
+    }
+
+    // selectSchool = school the menu is operating on
+    // anchorEl = element where should the menu open
     return (
         <TableContainer component={Paper}>
             <Table>
@@ -31,7 +48,7 @@ export default function SchoolTable({ schools, onEdit, onDelete }: SchoolTablePr
                         <TableCell>Logo</TableCell>
                         <TableCell>Name</TableCell>
                         <TableCell>Slug</TableCell>
-                        <TableCell><IconButton><MoreVertIcon>Edit Delete</MoreVertIcon></IconButton></TableCell>
+                        <TableCell>Actions</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -40,11 +57,19 @@ export default function SchoolTable({ schools, onEdit, onDelete }: SchoolTablePr
                             <TableCell>{school.logo ? ("Logo") : ("🏫")}</TableCell>
                             <TableCell>{school.name}</TableCell>
                             <TableCell>{school.slug}</TableCell>
-                            <TableCell><IconButton onClick={(e) => handleMenuOpen(e, school)}><MoreVertIcon /></IconButton></TableCell>
+                            <TableCell>
+                                <IconButton onClick={(event) => handleMenuOpen(event, school)}>
+                                    <MoreVertIcon />
+                                </IconButton>
+                            </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
+            <Menu open={open} anchorEl={anchorEl} onClose={handleMenuClose}>
+                <MenuItem onClick={handleEdit}>Edit</MenuItem>
+                <MenuItem onClick={handleDelete}>Delete</MenuItem>
+            </Menu>
         </TableContainer>
     )
-}
+}   

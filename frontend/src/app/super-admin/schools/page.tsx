@@ -49,8 +49,10 @@ export default function SchoolPage() {
                 {schools.length === 0 ?
                     (<p>No schools found.</p>)
                     : (
-                        <SchoolTable schools={schools} onEdit={(school)=>{console.log("Edit: ", school)}} onDelete={(school)=>{console.log("Edit: ", school)}}/>
-                    )}  
+                        <SchoolTable
+                            schools={schools} onEdit={(school) => { console.log("Edit: ", school) }} onDelete={(school) => { console.log("Edit: ", school) }}
+                        />
+                    )}
             </div>
         </>
     );
