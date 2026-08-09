@@ -4,6 +4,7 @@ import { getSchools } from "@/services/school.service";
 import { School } from "@/types/school";
 import { useEffect, useState } from "react";
 import SchoolTable from "@/components/school/SchoolTable";
+import { useRouter } from "next/navigation";
 
 // 1. call getSchools
 // 2. store schools in states
@@ -31,6 +32,11 @@ export default function SchoolPage() {
         }
     };
 
+    const router = useRouter();
+    const handleEdit = (school: School) => {
+        router.push(`/super-admin/schools/${school.id}/edit`)
+    }
+
     useEffect(() => {
         fetchSchools();
     }, []);
@@ -50,7 +56,7 @@ export default function SchoolPage() {
                     (<p>No schools found.</p>)
                     : (
                         <SchoolTable
-                            schools={schools} onEdit={(school) => { console.log("Edit: ", school) }} onDelete={(school) => { console.log("Edit: ", school) }}
+                            schools={schools} onEdit={(school) => {handleEdit(school)}} onDelete={(school) => { console.log("Edit: ", school) }}
                         />
                     )}
             </div>

@@ -10,9 +10,15 @@ export interface UpdateSchoolDto {
     logo?: string;
 };
 
-export interface School{
+export interface School {
     id: number;
     name: string;
     slug: string;
     logo?: string;
-}
+};
+
+export interface SchoolFormValues {
+    name: string;
+    slug: string;
+    logo: string;
+};

@@ -2,6 +2,7 @@ import { School } from "@/types/school";
 import { Table, TableHead, TableBody, TableRow, TableCell, TableContainer, Paper, IconButton, Menu, MenuItem } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface SchoolTableProps {
     schools: School[];
@@ -14,6 +15,7 @@ export default function SchoolTable({ schools, onEdit, onDelete }: SchoolTablePr
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // where sould menu appear
     const [selectedSchool, setSelectedSchool] = useState<School | null>(null); // which school does action apply to
 
+    const router = useRouter();
     const open = Boolean(anchorEl);
 
     const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, school: School) => {
@@ -27,13 +29,13 @@ export default function SchoolTable({ schools, onEdit, onDelete }: SchoolTablePr
     };
 
     const handleEdit = () => {
-        if(!selectedSchool) return;
+        if (!selectedSchool) return;
         onEdit(selectedSchool);
         handleMenuClose();
     }
 
     const handleDelete = () => {
-        if(!selectedSchool) return;
+        if (!selectedSchool) return;
         onDelete(selectedSchool);
         handleMenuClose();
     }
