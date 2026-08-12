@@ -1,7 +1,8 @@
 "use client"
 
-import { getSchoolById } from "@/services/school.service";
-import { School } from "@/types/school";
+import SchoolForm from "@/components/school/SchoolForm";
+import { getSchoolById, updateSchool } from "@/services/school.service";
+import { School, SchoolFormValues } from "@/types/school";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
@@ -32,9 +33,30 @@ export default function EditSchoolPage() {
         fetchSchool();
     }, [id]);
 
+    if (loading) return <p>Loadin school</p>
+    if (error) return <p>{error}</p>
+    if (!school) return <p>School not found</p>
+    if (!school.logo) return <p>No logo</p>
+
+    const handleSubmit = async(values: SchoolFormValues) => {
+        try{
+            await updateSchool(id!.toString(), values);
+        } catch (error){
+            if(error instanceof Error) {
+                setError(error.message);
+            } else {
+                setError("Something went wrong");
+            }
+        }
+    };
     return (
-        <>
-            Edit school page
-        </>
+        <SchoolForm
+            initialValues={{
+                name: school.name,
+                slug: school.name,
+                logo: school.logo
+            }}
+            onSubmit={handleSubmit}
+        />
     )
 }
