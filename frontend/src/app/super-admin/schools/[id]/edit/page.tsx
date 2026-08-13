@@ -37,8 +37,6 @@ export default function EditSchoolPage() {
     if (loading) return <p>Loadin school</p>
     if (error) return <p>{error}</p>
     if (!school) return <p>School not found</p>
-    // if (!school.logo) return <p>No logo</p>
-
 
     const handleSubmit = async (values: SchoolFormValues) => {
         try {
