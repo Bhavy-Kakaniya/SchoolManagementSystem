@@ -6,5 +6,6 @@ import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export default function EditSchoolPage() {
-    
+    const { id } = useParams();
+    return (<>school id {id}</>);
 }

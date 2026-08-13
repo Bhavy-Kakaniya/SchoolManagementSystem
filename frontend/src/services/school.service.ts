@@ -7,7 +7,8 @@ export const getSchools = async () => {
 };
 
 export const getSchoolById = async(schoolId: string) => {
-    return await api(`/super-admin/schools/${schoolId}`);
+    const response = await api(`/super-admin/schools/${schoolId}`);
+    return response.data;
 };
 
 export const createSchool = async (data: CreateSchoolDto) => {
