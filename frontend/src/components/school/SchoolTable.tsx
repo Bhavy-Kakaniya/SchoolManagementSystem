@@ -1,5 +1,5 @@
 import { School } from "@/types/school";
-import { Table, TableHead, TableBody, TableRow, TableCell, TableContainer, Paper, IconButton, Menu, MenuItem } from "@mui/material";
+import { Table, TableHead, TableBody, TableRow, TableCell, TableContainer, Paper, IconButton, Menu, MenuItem, Button } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -57,7 +57,11 @@ export default function SchoolTable({ schools, onEdit, onDelete }: SchoolTablePr
                     {schools.map((school) => (
                         <TableRow key={school.id}>
                             <TableCell>{school.logo ? ("Logo") : ("🏫")}</TableCell>
-                            <TableCell>{school.name}</TableCell>
+                            <TableCell>
+                                <Button onClick={() => router.push(`/super-admin/schools/${school.id}`)}>
+                                    {school.name}
+                                </Button>
+                            </TableCell>
                             <TableCell>{school.slug}</TableCell>
                             <TableCell>
                                 <IconButton onClick={(event) => handleMenuOpen(event, school)}>
