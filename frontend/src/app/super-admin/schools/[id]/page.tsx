@@ -4,6 +4,8 @@ import { getSchoolById } from "@/services/school.service";
 import { School } from "@/types/school";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@mui/material";
 
 export default function SchoolInfoPage() {
     const [school, setSchool] = useState<School | null>(null);
@@ -11,6 +13,8 @@ export default function SchoolInfoPage() {
     const [error, setError] = useState<string | null>(null);
 
     const { id } = useParams();
+    const router = useRouter();
+
     useEffect(() => {
         const fetchSchool = async () => {
             try {
@@ -39,6 +43,7 @@ export default function SchoolInfoPage() {
             <p>Name: {school.name}</p>
             <p>Slug: {school.slug}</p>
             <p>Logo: {school.logo ? school.logo : "No logo"}</p>
+            <Button variant="contained" onClick={()=>router.push(`/super-admin/schools/${id}/edit`)}>Edit school</Button>
         </div>
     );
 }
