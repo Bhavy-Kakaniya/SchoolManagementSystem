@@ -5,6 +5,7 @@ import { School } from "@/types/school";
 import { useEffect, useState } from "react";
 import SchoolTable from "@/components/school/SchoolTable";
 import { useRouter } from "next/navigation";
+import { Button } from "@mui/material";
 
 // 1. call getSchools
 // 2. store schools in states
@@ -40,7 +41,6 @@ export default function SchoolPage() {
     const handleDelete = async (school: School) => {
         try {
             await deleteSchool(school.id.toString());
-
             setSchools((previousSchools) =>
                 previousSchools.filter(
                     (currentSchool) => currentSchool.id !== school.id
@@ -62,6 +62,7 @@ export default function SchoolPage() {
         <>
             <div>
                 <h1>Schools</h1>
+                <Button color="primary" onClick={() => router.push("/super-admin/schools/create")}>Create</Button>
                 {schools.length === 0 ?
                     (<p>No schools found.</p>)
                     : (
