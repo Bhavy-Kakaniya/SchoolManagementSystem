@@ -12,7 +12,7 @@ router.post('/schools/:schoolId/admin', authMiddleware, requireRoles(RoleName.SU
 router.get('/schools', authMiddleware, requireRoles(RoleName.SUPER_ADMIN), getAllSchoolsController);
 router.get('/schools/:schoolId', authMiddleware, requireRoles(RoleName.SUPER_ADMIN), getSchoolByIdController);
 router.put('/schools/:schoolId', authMiddleware, requireRoles(RoleName.SUPER_ADMIN), updateSchoolController);
-router.delete('/schools/:schoolId', authMiddleware, requireRoles(RoleName.SUPER_ADMIN), softDeleteSchoolController);
+router.patch('/schools/:schoolId', authMiddleware, requireRoles(RoleName.SUPER_ADMIN), softDeleteSchoolController);
 router.patch("/schools/:schoolId/restore", authMiddleware, requireRoles(RoleName.SUPER_ADMIN), restoreSchoolController);
 
 export default router;

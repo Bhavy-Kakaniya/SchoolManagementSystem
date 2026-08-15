@@ -1,6 +1,6 @@
 "use client"
 
-import { getSchools } from "@/services/school.service";
+import { deleteSchool, getSchools } from "@/services/school.service";
 import { School } from "@/types/school";
 import { useEffect, useState } from "react";
 import SchoolTable from "@/components/school/SchoolTable";
@@ -16,6 +16,7 @@ export default function SchoolPage() {
     const [schools, setSchools] = useState<School[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const router = useRouter();
 
     const fetchSchools = async () => {
         try {
@@ -32,22 +33,31 @@ export default function SchoolPage() {
         }
     };
 
-    const router = useRouter();
     const handleEdit = (school: School) => {
         router.push(`/super-admin/schools/${school.id}/edit`)
     }
+
+    const handleDelete = async (school: School) => {
+        try {
+            await deleteSchool(school.id.toString());
+
+            setSchools((previousSchools) =>
+                previousSchools.filter(
+                    (currentSchool) => currentSchool.id !== school.id
+                )
+            );
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
     useEffect(() => {
         fetchSchools();
     }, []);
 
-    if (loading) {
-        return <p>Loading schools ...</p>;
-    }
+    if (loading) return <p>Loading schools ...</p>;
+    if (error) return <p>{error}</p>;
 
-    if (error) {
-        return <p>{error}</p>;
-    }
     return (
         <>
             <div>
@@ -56,7 +66,7 @@ export default function SchoolPage() {
                     (<p>No schools found.</p>)
                     : (
                         <SchoolTable
-                            schools={schools} onEdit={(school) => {handleEdit(school)}} onDelete={(school) => { console.log("Edit: ", school) }}
+                            schools={schools} onEdit={(school) => { handleEdit(school) }} onDelete={handleDelete}
                         />
                     )}
             </div>
