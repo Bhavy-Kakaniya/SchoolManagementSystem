@@ -22,3 +22,8 @@ export interface SchoolFormValues {
     slug: string;
     logo: string;
 };
+
+export interface CreateSchoolAdminValues {
+    name: string;
+    email: string;
+}

@@ -1,5 +1,5 @@
 import { api } from "@/lib/api";
-import { CreateSchoolDto, UpdateSchoolDto } from "@/types/school";
+import { CreateSchoolAdminValues, CreateSchoolDto, UpdateSchoolDto } from "@/types/school";
 
 export const getSchools = async () => {
     const response = await api("/super-admin/schools");
@@ -36,3 +36,10 @@ export const restoreSchool = async(schoolId:string) => {
         method: "PATCH"
     });
 };
+
+export const createSchoolAdmin = async (schoolId: string, data: CreateSchoolAdminValues) => {
+    return await api(`/super-admin/schools/${schoolId}/admin`, {
+        method: "POST",
+        body: JSON.stringify(data)
+    });
+}

@@ -44,6 +44,7 @@ export default function SchoolInfoPage() {
             <p>Slug: {school.slug}</p>
             <p>Logo: {school.logo ? school.logo : "No logo"}</p>
             <Button variant="contained" onClick={()=>router.push(`/super-admin/schools/${id}/edit`)}>Edit school</Button>
+            <Button onClick={()=>router.push(`/super-admin/schools/${id}/admin`)}>create</Button>
         </div>
     );
 }
