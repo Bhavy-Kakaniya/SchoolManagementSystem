@@ -26,15 +26,6 @@ type CreateStudentInput = {
 }
 
 export const createStudentService = async (schoolId: string, data: CreateStudentInput) => {
-    // const existingUser = await prisma.user.findFirst({
-    //     where: { schoolId, email: data.email }
-    // });
-    // if (existingUser) throw new AppError(409, "Email already exists");
-    // const existingStudent = await prisma.student.findFirst({
-    //     where: { schoolId, admissionNo: data.admissionNo }
-    // });
-    // if(existingStudent) throw new AppError(409, "Admission number already exisits");
-
     const [existingUser, existingStudent, studentRole] = await Promise.all([
         prisma.user.findFirst({ where: { schoolId, email: data.email } }),
         prisma.student.findFirst({ where: { schoolId, admissionNo: data.admissionNo } }),
