@@ -35,6 +35,12 @@ export default function CreateSchoolAdminPage() {
         <div>
             <h1>Create School Admin</h1>
             {error && <p>{error}</p>}
+            {!createAdmin && (
+                <SchoolAdminForm
+                    initialValues={{ name: "", email: "" }}
+                    onSubmit={handleSubmit}
+                />
+            )}
             {createAdmin && (
                 <div>
                     <h2>School Admin Created Successfully</h2>
@@ -43,12 +49,6 @@ export default function CreateSchoolAdminPage() {
                     <p>Temporary Password: {createAdmin.temporaryPassword}</p>
                     <Button variant="outlined" onClick={() => router.push(`/super-admin/schools/${id}`)}>Back to School</Button>
                 </div>
-            )}
-            {!createAdmin && (
-                <SchoolAdminForm
-                    initialValues={{ name: "", email: "" }}
-                    onSubmit={handleSubmit}
-                />
             )}
         </div>
     )

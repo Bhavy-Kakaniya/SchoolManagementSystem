@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { createSchoolAdminSchema, getAllSchoolsSchema, updateSchoolSchema } from './super-admin.validation';
-import { createSchoolAdminService, getSchoolAdminService, getAllSchoolsService, getSchoolByIdService, restoreSchoolService, softDeleteSchoolService, updateSchoolService } from './super-admin.service';
+import { createSchoolAdminService, getSchoolAdminsService, getAllSchoolsService, getSchoolByIdService, restoreSchoolService, softDeleteSchoolService, updateSchoolService } from './super-admin.service';
 import { schoolIdParamsSchema } from '../../common/validations/params.validation';
 
 export const createSchoolAdminController = async (req: Request, res: Response) => {
@@ -26,11 +26,11 @@ export const getSchoolByIdController = async (req: Request, res: Response) => {
     res.status(200).json(result);
 };
 
-export const getSchoolAdminController = async(req: Request, res: Response) => {
+export const getSchoolAdminsController = async (req: Request, res: Response) => {
     const { schoolId } = schoolIdParamsSchema.parse(req.params);
-    const result = await getSchoolAdminService(schoolId);
+    const result = await getSchoolAdminsService(schoolId);
     res.status(200).json(result);
-}
+};
 
 export const updateSchoolController = async (req: Request, res: Response) => {
     const { schoolId } = schoolIdParamsSchema.parse(req.params);

@@ -26,4 +26,11 @@ export interface SchoolFormValues {
 export interface CreateSchoolAdminValues {
     name: string;
     email: string;
-}
+};
+
+export interface SchoolAdmin {
+    id: string;
+    name: string;
+    email: string;
+    createdAt: string;
+};

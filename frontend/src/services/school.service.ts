@@ -42,4 +42,8 @@ export const createSchoolAdmin = async (schoolId: string, data: CreateSchoolAdmi
         method: "POST",
         body: JSON.stringify(data)
     });
-}
+};
+
+export const getSchoolAdmins = async (schoolId: string) => {
+    return await api(`/super-admin/schools/${schoolId}/admin`);
+};

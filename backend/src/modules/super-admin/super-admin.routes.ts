@@ -1,6 +1,6 @@
 import { RoleName } from "@prisma/client";
 import { Router } from "express";
-import { createSchoolAdminController, getAllSchoolsController, getSchoolAdminController, getSchoolByIdController, restoreSchoolController, softDeleteSchoolController, updateSchoolController } from "./super-admin.controller";
+import { createSchoolAdminController, getAllSchoolsController, getSchoolAdminsController, getSchoolByIdController, restoreSchoolController, softDeleteSchoolController, updateSchoolController } from "./super-admin.controller";
 import authMiddleware from '../../common/middleware/auth.middleware';
 import { requireRoles } from '../../common/middleware/authorization.middleware';
 import { createSchoolController } from "../school/school.controller";
@@ -9,7 +9,7 @@ const router = Router();
 
 router.post("/schools", authMiddleware, requireRoles(RoleName.SUPER_ADMIN), createSchoolController);
 router.post('/schools/:schoolId/admin', authMiddleware, requireRoles(RoleName.SUPER_ADMIN), createSchoolAdminController);
-router.get('/schools/:schoolId/admin', authMiddleware, requireRoles(RoleName.SUPER_ADMIN), getSchoolAdminController)
+router.get('/schools/:schoolId/admin', authMiddleware, requireRoles(RoleName.SUPER_ADMIN), getSchoolAdminsController)
 router.get('/schools', authMiddleware, requireRoles(RoleName.SUPER_ADMIN), getAllSchoolsController);
 router.get('/schools/:schoolId', authMiddleware, requireRoles(RoleName.SUPER_ADMIN), getSchoolByIdController);
 router.put('/schools/:schoolId', authMiddleware, requireRoles(RoleName.SUPER_ADMIN), updateSchoolController);

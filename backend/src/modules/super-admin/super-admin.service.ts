@@ -106,28 +106,25 @@ export const getSchoolByIdService = async (schoolId: string) => {
     };
 };
 
-export const getSchoolAdminService = async (schoolId: string) => {
+export const getSchoolAdminsService = async (schoolId: string) => {
     const school = await prisma.school.findUnique({ where: { id: schoolId, deletedAt: null } });
     if (!school) {
         throw new AppError(404, "School not found");
     }
-    const schoolAdmin = prisma.user.findMany({
+    const schoolAdmin = await prisma.user.findMany({
         where: {
             schoolId,
             roles: {
-                some: {
-                    role: { name: RoleName.ADMIN }
-                }
+                some: { role: { name: RoleName.ADMIN } }
             }
         },
-        select: {
-            id: true,
-            name: true,
-            email: true,
-            createdAt: true
-        }
+        select: { id: true, name: true, email: true, createdAt: true }
     });
-
+    return {
+        success: true,
+        message: "School admins fetched successfully",
+        data: schoolAdmin
+    };
 }
 
 export const updateSchoolService = async (schoolId: string, data: updateSchoolBody) => {
