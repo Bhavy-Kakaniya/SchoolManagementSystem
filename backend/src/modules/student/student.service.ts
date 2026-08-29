@@ -63,7 +63,7 @@ export const createStudentService = async (schoolId: string, data: CreateStudent
                     lastName: data.lastName,
                     admissionNo: data.admissionNo,
                     gender: data.gender,
-                    dateOfBirth: data.dateOfBirth,
+                    dateOfBirth: new Date(data.dateOfBirth),
                     phone: data.phone,
                     bloodGroup: data.bloodGroup,
                     address: data.address
