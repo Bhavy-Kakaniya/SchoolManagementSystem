@@ -14,7 +14,7 @@ export interface Student {
         email: string;
         name: string;
     }
-}
+};
 
 export interface CreateStudentValues {
     firstName: string;
@@ -26,4 +26,15 @@ export interface CreateStudentValues {
     phone?: string;
     bloodGroup?: string;
     address?: string;
-}
+};
+
+export interface CreateStudentResponse {
+    message: string;
+    student: Student;
+    temporaryPassword: string;
+};
+
+export interface CreatedStudent {
+    student: Student;
+    temporaryPassword: string
+};
