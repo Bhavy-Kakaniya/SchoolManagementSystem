@@ -3,13 +3,13 @@
 
 import CreateStudentForm from "@/components/student/StudentForm";
 import { createStudent } from "@/services/student.service";
-import { CreateStudentValues } from "@/types/student";
+import { CreatedStudent, CreateStudentValues } from "@/types/student";
 import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function StudentForm() {
-    const [createdStudent, setCreatedStudent] = useState<{ student: any; temporaryPassword: string; } | null>(null);
+    const [createdStudent, setCreatedStudent] = useState<CreatedStudent | null>(null);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
 
