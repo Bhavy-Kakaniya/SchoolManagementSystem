@@ -1,49 +1,49 @@
 import { api } from "@/lib/api";
 import { CreateSchoolAdminValues, CreateSchoolDto, UpdateSchoolDto } from "@/types/school";
 
-export const getSchools = async () => {
+export const getSchoolsService = async () => {
     const response = await api("/super-admin/schools");
     return response.data;
 };
 
-export const getSchoolById = async(schoolId: string) => {
+export const getSchoolByIdService = async(schoolId: string) => {
     const response = await api(`/super-admin/schools/${schoolId}`);
     return response.data;
 };
 
-export const createSchool = async (data: CreateSchoolDto) => {
+export const createSchoolService = async (data: CreateSchoolDto) => {
     return await api("/super-admin/schools", {
         method: "POST",
         body: JSON.stringify(data)
     });
 };
 
-export const updateSchool = async(schoolId: string, data: UpdateSchoolDto) => {
+export const updateSchoolService = async(schoolId: string, data: UpdateSchoolDto) => {
     return await api(`/super-admin/schools/${schoolId}`, {
         method: "PUT",
         body: JSON.stringify(data)
     });
 };
 
-export const deleteSchool = async(schoolId: string) => {
+export const deleteSchoolService = async(schoolId: string) => {
     return await api(`/super-admin/schools/${schoolId}`, {
         method : "PATCH",
     });
 };
 
-export const restoreSchool = async(schoolId:string) => {
+export const restoreSchoolService = async(schoolId:string) => {
     return await api(`/super-admin/schools/${schoolId}/restore`, {
         method: "PATCH"
     });
 };
 
-export const createSchoolAdmin = async (schoolId: string, data: CreateSchoolAdminValues) => {
+export const createSchoolAdminService = async (schoolId: string, data: CreateSchoolAdminValues) => {
     return await api(`/super-admin/schools/${schoolId}/admin`, {
         method: "POST",
         body: JSON.stringify(data)
     });
 };
 
-export const getSchoolAdmins = async (schoolId: string) => {
+export const getSchoolAdminsService = async (schoolId: string) => {
     return await api(`/super-admin/schools/${schoolId}/admin`);
 };

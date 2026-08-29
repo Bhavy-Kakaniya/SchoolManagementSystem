@@ -1,7 +1,7 @@
 "use client"
 
 import SchoolForm from "@/components/school/SchoolForm";
-import { getSchoolById, updateSchool } from "@/services/school.service";
+import { getSchoolByIdService, updateSchoolService } from "@/services/school.service";
 import { School, SchoolFormValues } from "@/types/school";
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -17,7 +17,7 @@ export default function EditSchoolPage() {
         const fetchSchool = async () => {
             try {
                 if (!id) { return }
-                const school = await getSchoolById(id.toString());
+                const school = await getSchoolByIdService(id.toString());
                 setSchool(school)
             }
             catch (err) {
@@ -40,7 +40,7 @@ export default function EditSchoolPage() {
 
     const handleSubmit = async (values: SchoolFormValues) => {
         try {
-            await updateSchool(id!.toString(), values);
+            await updateSchoolService(id!.toString(), values);
             router.push(`/super-admin/schools/${id}`);
         } catch (error) {
             if (error instanceof Error) {

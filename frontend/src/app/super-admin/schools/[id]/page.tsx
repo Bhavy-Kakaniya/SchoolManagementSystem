@@ -1,6 +1,6 @@
 "use client";
 
-import { getSchoolById, getSchoolAdmins } from "@/services/school.service";
+import { getSchoolByIdService, getSchoolAdminsService } from "@/services/school.service";
 import { School, SchoolAdmin } from "@/types/school";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -24,8 +24,8 @@ export default function SchoolInfoPage() {
                 if (!id) return;
                 const schoolId = id.toString();
                 const [schoolResult, adminResult] = await Promise.all([
-                    getSchoolById(schoolId),
-                    getSchoolAdmins(schoolId)
+                    getSchoolByIdService(schoolId),
+                    getSchoolAdminsService(schoolId)
                 ]);
 
                 setSchool(schoolResult);

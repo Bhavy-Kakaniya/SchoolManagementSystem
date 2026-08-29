@@ -1,6 +1,6 @@
 "use client"
 
-import { getStudents } from "@/services/student.service";
+import { getStudentsService } from "@/services/student.service";
 import { Student } from "@/types/student";
 import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
@@ -18,7 +18,7 @@ export default function StudentsPage() {
     useEffect(() => {
         const fetchStudents = async () => {
             try {
-                const result = await getStudents(page, limit);
+                const result = await getStudentsService(page, limit);
                 setStudents(result.students);
                 setTotalPages(result.pagination.totalPages);
             } catch (err) {

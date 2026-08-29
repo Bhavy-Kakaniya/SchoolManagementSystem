@@ -2,7 +2,7 @@
 "use client"
 
 import CreateStudentForm from "@/components/student/StudentForm";
-import { createStudent } from "@/services/student.service";
+import { createStudentService } from "@/services/student.service";
 import { CreatedStudent, CreateStudentValues } from "@/types/student";
 import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
@@ -16,7 +16,7 @@ export default function StudentForm() {
     const handleSubmit = async (values: CreateStudentValues) => {
         try {
             setError(null);
-            const result = await createStudent(values);
+            const result = await createStudentService(values);
             setCreatedStudent({ student: result.student, temporaryPassword: result.temporaryPassword });
         } catch (err) {
             if (err instanceof Error) {

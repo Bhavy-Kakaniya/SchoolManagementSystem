@@ -1,7 +1,7 @@
 "use client"
 
 import SchoolAdminForm from "@/components/school-admin/SchoolAdminForm";
-import { createSchoolAdmin } from "@/services/school.service";
+import { createSchoolAdminService } from "@/services/school.service";
 import { CreateSchoolAdminValues } from "@/types/school";
 import { Button } from "@mui/material";
 import { useParams, useRouter } from "next/navigation"
@@ -16,7 +16,7 @@ export default function CreateSchoolAdminPage() {
 
         try {
             if (!id) return;
-            const result = await createSchoolAdmin(id.toString(), values);
+            const result = await createSchoolAdminService(id.toString(), values);
             setCreateAdmin({
                 name: result.admin.name,
                 email: result.admin.email,

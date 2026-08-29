@@ -1,6 +1,6 @@
 "use client"
 import SchoolForm from "@/components/school/SchoolForm";
-import { createSchool } from "@/services/school.service";
+import { createSchoolService } from "@/services/school.service";
 import { SchoolFormValues } from "@/types/school";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -11,7 +11,7 @@ export default function CreateSchoolPage() {
 
     const handleSubmit = async (values: SchoolFormValues) => {
         try {
-            await createSchool(values);
+            await createSchoolService(values);
             router.push("/super-admin/schools");
         } catch (err) {
             if (err instanceof Error) {

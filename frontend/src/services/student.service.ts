@@ -1,15 +1,15 @@
 import { api } from "@/lib/api";
-import { CreateStudentValues } from "@/types/student";
+import { CreateStudentResponse, CreateStudentValues } from "@/types/student";
 
-export const getStudents = async (page: number = 1,limit: number = 10) => {
+export const getStudentsService = async (page: number = 1,limit: number = 10) => {
     return await api(`/students?page=${page}&limit=${limit}`);
 };
 
-export const getStudentById = async (studentId: string) => {
+export const getStudentByIdService = async (studentId: string) => {
     return await api(`/students/${studentId}`);
 };
 
-export const createStudent = async (data: CreateStudentValues) => {
+export const createStudentService = async (data: CreateStudentValues): Promise<CreateStudentResponse> => {
     return await api("/students", {
         method: "POST",
         body: JSON.stringify(data),

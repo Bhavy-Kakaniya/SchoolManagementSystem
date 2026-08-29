@@ -1,13 +1,13 @@
 "use client"
 
-import { deleteSchool, getSchools } from "@/services/school.service";
+import { deleteSchoolService, getSchoolsService } from "@/services/school.service";
 import { School } from "@/types/school";
 import { useEffect, useState } from "react";
 import SchoolTable from "@/components/school/SchoolTable";
 import { useRouter } from "next/navigation";
 import { Button } from "@mui/material";
 
-// 1. call getSchools
+// 1. call getSchoolsService
 // 2. store schools in states
 // 3. loading or error state
 // 4. pass data to school table
@@ -21,7 +21,7 @@ export default function SchoolPage() {
 
     const fetchSchools = async () => {
         try {
-            const schools = await getSchools();
+            const schools = await getSchoolsService();
             setSchools(schools);
         } catch (err) {
             console.error(err);
@@ -40,7 +40,7 @@ export default function SchoolPage() {
 
     const handleDelete = async (school: School) => {
         try {
-            await deleteSchool(school.id.toString());
+            await deleteSchoolService(school.id.toString());
             setSchools((previousSchools) =>
                 previousSchools.filter(
                     (currentSchool) => currentSchool.id !== school.id
