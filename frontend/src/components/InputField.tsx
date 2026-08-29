@@ -8,7 +8,7 @@ interface InputFieldTagProps {
 	color?: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
 	margin?: 'none' | 'normal' | 'dense';
 	width?: string | number;
-	type?: 'password' | 'text' | 'number' | 'email';
+	type?: 'password' | 'text' | 'number' | 'email' | 'date';
 	value?: string | number;
 	required?: boolean;
 	onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
