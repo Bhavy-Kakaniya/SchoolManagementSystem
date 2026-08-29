@@ -1,0 +1,60 @@
+// /src/app/school-admin/students/create/page.tsx
+"use client"
+
+import CreateStudentForm from "@/components/student/StudentForm";
+import { createStudent } from "@/services/student.service";
+import { CreateStudentValues } from "@/types/student";
+import { Button } from "@mui/material";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
+export default function StudentForm() {
+    const [createdStudent, setCreatedStudent] = useState<{ student: any; temporaryPassword: string; } | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const router = useRouter();
+
+    const handleSubmit = async (values: CreateStudentValues) => {
+        try {
+            setError(null);
+            const result = await createStudent(values);
+            setCreatedStudent({ student: result.student, temporaryPassword: result.temporaryPassword });
+        } catch (err) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError("Something went wrong");
+            }
+        }
+    };
+
+    return (
+        <div className="p-6">
+            {error && <p>{error}</p>}
+            {!createdStudent && (
+                <CreateStudentForm initialValues={{
+                    firstName: "",
+                    lastName: "",
+                    email: "",
+                    admissionNo: "",
+                    gender: "MALE",
+                    dateOfBirth: "",
+                    phone: "",
+                    bloodGroup: "",
+                    address: ""
+                }}
+                    onSubmit={handleSubmit} />
+            )}
+
+            {createdStudent && (
+                <div>
+                    <h1>Student Created Successfully</h1>
+                    <p>Name: {createdStudent.student.firstName}{createdStudent.student.lastName}</p>
+                    <p>Admission No: {createdStudent.student.admissionNo}</p>
+                    <p>Email: {createdStudent.student.user.email}</p>
+                    <p>Temporary Password: {createdStudent.temporaryPassword}</p>
+                    <Button variant="contained" onClick={() => router.push("/school-admin/students")}>Back to Students</Button>
+                </div>
+            )}
+        </div>
+    );
+};
