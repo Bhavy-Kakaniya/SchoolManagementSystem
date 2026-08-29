@@ -19,3 +19,8 @@ problem solved :
 # 5. Error squiggle in status in controller though there was no syntax problem.
 -> Problem: No error in service but still getting error in controller in status code despite everything was working.
 -> Solution: I forgot to import Request and Response from express and started coding controller directly so simply imported them and the error was solved.
+
+# 6 Bug in saving BirthDate
+-> Problem: Getting error while creating student.
+Invalid `tx.student.create()` invocation in D:\SchoolManagementSystem\backend\src\modules\student\student.service.ts:58:46 55 roleId: studentRole.id 56 } 57 }); → 58 const student = await tx.student.create({ data: { userId: "615e2a89-915a-4330-96bf-8ff993a71b34", schoolId: "9198f731-ea15-4710-834e-38b8fe0292ef", firstName: "new ", lastName: "student", admissionNo: "1003", gender: "MALE", dateOfBirth: "2002-06-23", ~~~~~~~~~~~~ phone: "1231231231", bloodGroup: "A", address: "akjdhjkajhkjwehkjewh" }, include: { user: { select: { id: true, email: true, name: true } } } }) Invalid value for argument `dateOfBirth`: premature end of input. Expected ISO-8601 DateTime.
+-> Solution: Frontend sending 2002-06-23, but prisma's DateTime expects 2002-06-23T00:00:00.000Z a full ISO-8601 datetime, in backend I changed dateOfBirth: data.dateOfBirth to dateOfBirth: new Date(data.dateOfBirth)
