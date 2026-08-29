@@ -8,8 +8,9 @@ interface StudentTableProps {
     onView: (student: Student) => void;
 }
 
-export default function StudentTable({students, onView}: StudentTableProps){
+export default function StudentTable({ students, onView }: StudentTableProps) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
     const open = Boolean();
+
 }
