@@ -2,55 +2,51 @@ import { Request, Response } from 'express';
 import { createSchoolAdminSchema, getAllSchoolsSchema, updateSchoolSchema } from './super-admin.validation';
 import { createSchoolAdminService, getSchoolAdminsService, getAllSchoolsService, getSchoolByIdService, restoreSchoolService, softDeleteSchoolService, updateSchoolService } from './super-admin.service';
 import { schoolIdParamsSchema } from '../../common/validations/params.validation';
+import catchAsync from '../../common/utils/catchAsync';
 
-export const createSchoolAdminController = async (req: Request, res: Response) => {
+export const createSchoolAdminController = catchAsync(async (req: Request, res: Response) => {
     const validateData = createSchoolAdminSchema.parse(req.body);
     const { schoolId } = schoolIdParamsSchema.parse(req.params);
     const result = await createSchoolAdminService(schoolId, validateData);
     res.status(201).json(result);
-};
+});
 
-export const getAllSchoolsController = async (req: Request, res: Response) => {
-    // GET /super-admin/schools
-    // GET /super-admin/schools?page=1&limit=2
-    // GET /super-admin/schools?search=modi
-    // GET /super-admin/schools?search=MODI
+export const getAllSchoolsController = catchAsync(async (req: Request, res: Response) => {
     const query = getAllSchoolsSchema.parse(req.query);
     const result = await getAllSchoolsService(query);
     res.status(200).json(result);
-};
+});
 
-export const getSchoolByIdController = async (req: Request, res: Response) => {
+export const getSchoolByIdController = catchAsync(async (req: Request, res: Response) => {
     const { schoolId } = schoolIdParamsSchema.parse(req.params);
     const result = await getSchoolByIdService(schoolId);
     res.status(200).json(result);
-};
+});
 
-export const getSchoolAdminsController = async (req: Request, res: Response) => {
+export const getSchoolAdminsController = catchAsync(async (req: Request, res: Response) => {
     const { schoolId } = schoolIdParamsSchema.parse(req.params);
     const result = await getSchoolAdminsService(schoolId);
     res.status(200).json(result);
-};
+});
 
-export const updateSchoolController = async (req: Request, res: Response) => {
+export const updateSchoolController = catchAsync(async (req: Request, res: Response) => {
     const { schoolId } = schoolIdParamsSchema.parse(req.params);
     const body = updateSchoolSchema.parse(req.body);
     const result = await updateSchoolService(schoolId, body);
     res.status(200).json(result);
-};
+});
 
-export const softDeleteSchoolController = async (req: Request, res: Response) => {
+export const softDeleteSchoolController = catchAsync(async (req: Request, res: Response) => {
     const { schoolId } = schoolIdParamsSchema.parse(req.params);
     const result = await softDeleteSchoolService(schoolId);
     res.status(200).json(result);
-};
+});
 
-export const restoreSchoolController = async (req: Request, res: Response) => {
+export const restoreSchoolController = catchAsync(async (req: Request, res: Response) => {
     const { schoolId } = schoolIdParamsSchema.parse(req.params);
     const result = await restoreSchoolService(schoolId);
     res.status(200).json(result);
-};
-
+});
 
 /*
 {
