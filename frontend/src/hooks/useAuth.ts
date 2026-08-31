@@ -1,21 +1,10 @@
 "use client"
 
-// 1. loading state
-// 2. /auth/me call
-// 3. role validation
-// 4. login redirect
-// 5. unauthorized redirect
-
-/*
-    /auth/me -> extract roles -> hasAccess? -> yes → setLoading(false) 
-                                               no  → /unauthorized
-                                               error → /login
-*/
-
 import { api } from "@/lib/api";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { RoleName } from "@/types/roles";
+import { getMeService } from "@/services/auth.service";
 
 export const useAuth = (allowedRoles: RoleName[]) => {
     const [loading, setLoading] = useState<boolean>(true);
@@ -24,34 +13,21 @@ export const useAuth = (allowedRoles: RoleName[]) => {
     useEffect(() => {
         const checkAccess = async () => {
             try {
-                const userData = await api("/auth/me");
-
-                console.log("User Data:", userData);
-                console.log("Roles Array:", userData.rolesArray);
-                
+                const userData = await getMeService();
                 const userRoles = userData.rolesArray || [];
-                console.log("Allowed Roles:", allowedRoles);
-                
-                const hasAccess = userRoles.some((role: RoleName) => {
-                    console.log("Comparing:", role, allowedRoles.includes(role));
-                    return allowedRoles.includes(role);
-                });
-
-                console.log("Has Access:", hasAccess);
+                const hasAccess = userRoles.some((role: RoleName) => allowedRoles.includes(role));
 
                 if (!hasAccess) {
                     router.push('/unauthorized');
                     return;
                 }
-
                 setLoading(false);
             }
-            catch (e) {
+            catch {
                 router.push('/login');
-                return;
             }
         }
-        checkAccess()
+        checkAccess();
     }, [allowedRoles, router]);
 
     return { loading };
