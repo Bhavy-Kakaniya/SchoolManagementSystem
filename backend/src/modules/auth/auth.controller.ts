@@ -1,9 +1,11 @@
 import { Request, Response } from "express";
 import { getMeService, loginUserService, logoutService, refreshTokenService } from "./auth.service";
 import catchAsync from "../../common/utils/catchAsync";
+import { loginSchema } from "./auth.validation";
 
 export const loginController = catchAsync(async (req: Request, res: Response) => {
-    const result = await loginUserService(req.body);
+    const payload = await loginSchema.parse(req.body);
+    const result = await loginUserService(payload);
     res.json(result);
 });
 
