@@ -1,7 +1,8 @@
 export enum RoleName {
     SUPER_ADMIN = "SUPER_ADMIN",
+    SCHOOL_ADMIN = "ADMIN",
     PRINCIPAL = "PRINCIPAL",
     TEACHER = "TEACHER",
     STUDENT = "STUDENT",
     PARENT = "PARENT"
-}
+};
