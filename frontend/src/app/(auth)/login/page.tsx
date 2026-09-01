@@ -2,7 +2,7 @@
 
 import { api } from '@/lib/api';
 import { useRouter } from 'next/navigation';
-import InputFieldTag from "@/components/InputField";
+import InputFieldTag, { InputFieldTagProps } from "@/components/InputField";
 import Link from "next/link";
 import Lock from '@mui/icons-material/Lock';
 import Visibility from '@mui/icons-material/Visibility';
@@ -10,6 +10,9 @@ import Email from '@mui/icons-material/Email';
 import React, { useState, useEffect } from "react";
 import { IconButton } from "@mui/material";
 import { VisibilityOff } from "@mui/icons-material";
+import { getMeService, loginService } from '@/services/auth.service';
+import { getRoleRoute } from '@/lib/auth';
+import { getErrorMessage } from '@/lib/error';
 
 export default function LoginPage() {
     const class1 = "min-h-screen bg-blue-500 flex flex-col items-center justify-center"
@@ -22,9 +25,8 @@ export default function LoginPage() {
 
     const router = useRouter();
 
-    // manage password visibility state
-    const [showPassword, setShowPassword] = useState<boolean>(false)
-    const [inputValue, setInputValue] = useState<string>("")
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
 
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
@@ -43,9 +45,7 @@ export default function LoginPage() {
         const checkUser = async () => {
             try {
                 const token = localStorage.getItem("accessToken");
-
                 if (!token) return;
-
                 const userData = await api("/auth/me");
                 const role = userData?.rolesArray?.[0];
 
@@ -63,32 +63,44 @@ export default function LoginPage() {
                 localStorage.removeItem("accessToken");
             }
         };
-
         checkUser();
     }, [router]);
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        try {
+            const result = await loginService({ email, password });
+            localStorage.setItem("accessToken", result.accessToken);
+            const userData = await getMeService();
+            const role = userData.rolesArray?.[0];
+            router.push(getRoleRoute(role));
+        } catch (err) {
+            setError(getErrorMessage(err));
+        }
+    };
 
-        const data = await api("/auth/login", {
-            method: "POST",
-            body: JSON.stringify({ email, password }),
-        });
-
-        localStorage.setItem("accessToken", data.accessToken);
-        const roleData = await api("/auth/me");
-
-        const roleRoutes: Record<string, string> = {
-            SUPER_ADMIN: "/super-admin",
-            PRINCIPAL: "/principal",
-            TEACHER: "/teacher",
-            STUDENT: "/student",
-            PARENT: "/parent",
-        };
-
-        const role = roleData.rolesArray?.[0];
-        router.push(roleRoutes[role] || "/unauthorized");
-    }
+    const formFields: InputFieldTagProps[] = [
+        {
+            type: "email",
+            label: "Email Address",
+            value: email,
+            onChange: handleEmailInputChange,
+            startIcon: <Email className="text-[#232323] m-1" />,
+        },
+        {
+            type: showPassword ? "text" : "password",
+            label: "Password",
+            value: password,
+            onChange: handlePasswordInputChange,
+            startIcon: <Lock className="text-[#232323] m-1" />,
+            endIcon: (
+                <IconButton onClick={handleShowPassword}
+                    edge="end" size="small" className="text-[#232323]" >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+            )
+        }
+    ];
 
     return (
         <>
@@ -97,61 +109,20 @@ export default function LoginPage() {
                 <div className={class2}>
                     <div className={class3}>Login</div>
                     <div className={class4}>
-
                         <form onSubmit={handleLogin}>
-
                             <div className="m-2">
-
-                                <InputFieldTag
-                                    type="email"
-                                    required={true}
-                                    label="Email Address"
-                                    margin="dense"
-                                    color="secondary"
-                                    width="480px"
-                                    value={email}
-                                    onChange={handleEmailInputChange}
-                                    startIcon={<Email className="text-[#232323] m-1" />}
-                                />
-
-                                <InputFieldTag
-                                    required={true}
-                                    label="Password"
-                                    type={showPassword ? 'text' : 'password'}
-                                    width="480px"
-                                    margin="dense"
-                                    color="secondary"
-                                    value={password}
-                                    onChange={handlePasswordInputChange}
-                                    startIcon={<Lock className="text-[#232323] m-1" />}
-                                    endIcon={
-                                        <IconButton
-                                            onClick={handleShowPassword}
-                                            edge="end"
-                                            size="small"
-                                            className="text-[#232323]"
-                                        >
-                                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                                        </IconButton>}
-                                />
-
+                                {formFields.map((field, index) => <InputFieldTag key={index} required={true} margin="dense" color="secondary" width="480px" {...field} />)}
                             </div>
-
                             <div className={class5}>
                                 <Link href="/reset">Forgot Password?</Link>
                             </div>
-
                             <div>
-                                <div className={class6}>
-                                    <button type="submit" className={class7}>Login</button>
-                                </div>
+                                <div className={class6}> <button type="submit" className={class7}>Login</button></div>
                             </div>
-
                         </form>
-
                     </div>
                 </div>
             </div>
         </>
-    )
-}
+    );
+};
