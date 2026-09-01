@@ -9,6 +9,7 @@ export const roleRoutes: Record<RoleName, string> = {
     [RoleName.PARENT]: "/parent",
 };
 
-export const getRoleRoute = (role: RoleName): string => {
+export const getRoleRoute = (role?: RoleName): string => {
+    if (!role) return "/unauthorized";
     return roleRoutes[role] || "/unauthorized";
 };
