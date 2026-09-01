@@ -4,15 +4,6 @@ import { Gender, RoleName } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 
-/*
- * check whether email already exists or not.
- * check admission number.
- * check student role exists.
- * password generation.
- * transaction : create user -> assign student role -> create student
- * return data
- */
-
 type CreateStudentInput = {
     firstName: string,
     lastName: string,
@@ -23,7 +14,18 @@ type CreateStudentInput = {
     phone?: string,
     bloodGroup?: string,
     address?: string
-}
+};
+
+type UpdateStudentInput = {
+    firstName: string;
+    lastName: string;
+    email: string;
+    gender: Gender;
+    dateOfBirth: Date;
+    phone?: string;
+    bloodGroup?: string;
+    address?: string;
+};
 
 export const createStudentService = async (schoolId: string, data: CreateStudentInput) => {
     const [existingUser, existingStudent, studentRole] = await Promise.all([
@@ -114,8 +116,58 @@ export const getStudentByIdService = async (schoolId: string, studentId: string)
         where: { id: studentId, schoolId },
         include: { user: { select: { id: true, email: true, name: true } } }
     });
-
-    if(!student) throw new AppError(404, "Student not found");
-
+    if (!student) throw new AppError(404, "Student not found");
     return student;
 }
+
+export const updateStudentService = async (schoolId: string, studentId: string, data: UpdateStudentInput) => {
+
+    // chech if student exist, use schoolId so that admin of a school cannot modify another school
+    const student = await prisma.student.findFirst({
+        where: { id: studentId, schoolId },
+        include: { user: true },
+    });
+    if (!student) throw new AppError(404, "Student not found");
+
+    // check if the new email already exists ?
+    if (data.email !== student.user.email) {
+        const existingUser = await prisma.user.findFirst({
+            where: { schoolId, email: data.email, id: { not: student.userId } }
+        });
+        if (existingUser) throw new AppError(409, "Email already exists");
+    }
+
+    // finally update the student information
+    const result = await prisma.$transaction(async (tx) => {
+
+        // update user table
+        const user = await tx.user.update({
+            where: { id: student.userId },
+            data: {
+                name: `${data.firstName} ${data.lastName}`,
+                email: data.email
+            }
+        });
+
+        // update student table
+        const updatedStudent = await tx.student.update({
+            where: { id: studentId },
+            data: {
+                firstName: data.firstName,
+                lastName: data.lastName,
+                gender: data.gender,
+                dateOfBirth: data.dateOfBirth,
+                phone: data.phone,
+                bloodGroup: data.bloodGroup,
+                address: data.address
+            },
+            // include will fetch the related user record linked to the updated student
+            include: { user: { select: { id: true, name: true, email: true } } }
+        });
+        return updatedStudent;
+    });
+    return {
+        message: "Student updated successfully",
+        student: result
+    };
+};
