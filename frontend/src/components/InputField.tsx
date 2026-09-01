@@ -2,7 +2,7 @@
 
 import { InputAdornment, TextField } from '@mui/material';
 
-interface InputFieldTagProps {
+export interface InputFieldTagProps {
 	label: string;
 	color?: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
 	margin?: 'none' | 'normal' | 'dense';
