@@ -2,6 +2,7 @@
 "use client"
 
 import CreateStudentForm from "@/components/student/StudentForm";
+import { getErrorMessage } from "@/lib/error";
 import { createStudentService } from "@/services/student.service";
 import { CreatedStudent, CreateStudentValues } from "@/types/student";
 import { Button } from "@mui/material";
@@ -19,11 +20,7 @@ export default function StudentForm() {
             const result = await createStudentService(values);
             setCreatedStudent({ student: result.student, temporaryPassword: result.temporaryPassword });
         } catch (err) {
-            if (err instanceof Error) {
-                setError(err.message);
-            } else {
-                setError("Something went wrong");
-            }
+            setError(getErrorMessage(err));
         }
     };
 
