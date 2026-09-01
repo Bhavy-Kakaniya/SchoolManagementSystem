@@ -10,7 +10,7 @@ export const createStudentSchema = z.object({
     firstName: z.string().min(2),
     lastName: z.string().min(2),
     email: z.email(),
-    addmissionNo: z.string().min(1),
+    admissionNo: z.string().min(1),
     gender: z.enum(Gender),
     dateOfBirth: z.coerce.date(),
     phone: z.string().optional(),
@@ -19,3 +19,7 @@ export const createStudentSchema = z.object({
 });
 
 export const studentIdParamSchema = z.object({ id: z.uuid() });
+
+export const updateStudentSchema = createStudentSchema.omit({
+    admissionNo: true
+});
