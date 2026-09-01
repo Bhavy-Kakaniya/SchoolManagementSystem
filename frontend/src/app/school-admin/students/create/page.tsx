@@ -1,7 +1,8 @@
 // /src/app/school-admin/students/create/page.tsx
 "use client"
 
-import CreateStudentForm from "@/components/student/StudentForm";
+import StudentForm from "@/components/student/StudentForm";
+import { Gender } from "@/types/student";
 import { getErrorMessage } from "@/lib/error";
 import { createStudentService } from "@/services/student.service";
 import { CreatedStudent, CreateStudentValues } from "@/types/student";
@@ -9,7 +10,7 @@ import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function StudentForm() {
+export default function CreateFormPage() {
     const [createdStudent, setCreatedStudent] = useState<CreatedStudent | null>(null);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
@@ -28,24 +29,26 @@ export default function StudentForm() {
         <div className="p-6">
             {error && <p>{error}</p>}
             {!createdStudent && (
-                <CreateStudentForm initialValues={{
-                    firstName: "",
-                    lastName: "",
-                    email: "",
-                    admissionNo: "",
-                    gender: "MALE",
-                    dateOfBirth: "",
-                    phone: "",
-                    bloodGroup: "",
-                    address: ""
-                }}
+                <StudentForm
+                    mode="create"
+                    initialValues={{
+                        firstName: "",
+                        lastName: "",
+                        email: "",
+                        admissionNo: "",
+                        gender: Gender.MALE,
+                        dateOfBirth: "",
+                        phone: "",
+                        bloodGroup: "",
+                        address: ""
+                    }}
                     onSubmit={handleSubmit} />
             )}
 
             {createdStudent && (
                 <div>
                     <h1>Student Created Successfully</h1>
-                    <p>Name: {createdStudent.student.firstName}{createdStudent.student.lastName}</p>
+                    <p>Name: {createdStudent.student.firstName}{" "}{createdStudent.student.lastName}</p>
                     <p>Admission No: {createdStudent.student.admissionNo}</p>
                     <p>Email: {createdStudent.student.user.email}</p>
                     <p>Temporary Password: {createdStudent.temporaryPassword}</p>
