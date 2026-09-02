@@ -1,6 +1,6 @@
 import prisma from '../../config/prisma';
 import AppError from '../../errors/AppError';
-import { Gender, RoleName } from '@prisma/client';
+import { Gender, RoleName, StudentStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 
@@ -92,10 +92,15 @@ export const getStudentsService = async (schoolId: string, page: number, limit: 
 
     const skip = (page - 1) * limit;
 
+    const where = {
+        schoolId,
+        status: StudentStatus.ACTIVE
+    };
+
     const [total, students] = await Promise.all([
-        prisma.student.count({ where: { schoolId } }),
+        prisma.student.count({ where }),
         prisma.student.findMany({
-            where: { schoolId },
+            where,
             include: { user: { select: { id: true, email: true, name: true } } },
             skip,
             take: limit,
@@ -169,5 +174,28 @@ export const updateStudentService = async (schoolId: string, studentId: string, 
     return {
         message: "Student updated successfully",
         student: result
+    };
+};
+
+export const deactivateStudentService = async (schoolId: string, studentId: string) => {
+
+    // get student and check if student exists
+    const student = await prisma.student.findFirst({
+        where: { id: studentId, schoolId }
+    });
+    if (!student) throw new AppError(404, "Student not found");
+
+    // check whether student already inactive
+    if (student.status === StudentStatus.INACTIVE) throw new AppError(400, "Student is already inactive");
+
+    // update status
+    const updatedStudent = await prisma.student.update({
+        where: { id: studentId },
+        data: { status: StudentStatus.INACTIVE }
+    });
+
+    return {
+        message: "Student deactivated successfully",
+        student: updatedStudent
     };
 };
