@@ -1,7 +1,7 @@
 "use client";
 
 import { getErrorMessage } from "@/lib/error";
-import { getStudentByIdService } from "@/services/student.service";
+import { deactivateStudentService, getStudentByIdService } from "@/services/student.service";
 import { Student } from "@/types/student";
 import { Button } from "@mui/material";
 import { useParams, useRouter } from "next/navigation";
@@ -30,6 +30,20 @@ export default function StudentById() {
         fetchStudent();
     }, [id]);
 
+    const handleDeactivate = async () => {
+        try {
+            if (!id) return;
+
+            const confirmed = window.confirm("Are you sure you want to deactivate this student");
+            if (!confirmed) return;
+
+            await deactivateStudentService(id.toString());
+            router.push("/school-admin/students");
+        } catch (err) {
+            setError(getErrorMessage(err));
+        }
+    }
+
     if (loading) return <p>Loading Student...</p>
     if (error) return <p>{error}</p>
     if (!student) return <p>Student not found</p>
@@ -46,6 +60,7 @@ export default function StudentById() {
             <p>Blood Group: {student.bloodGroup || "Not provided"}</p>
             <p>Address: {student.address || "Not provided"}</p>
             <Button variant="contained" onClick={() => router.push(`/school-admin/students/${id}/edit`)}>Edit Student</Button>
+            <Button variant="contained" onClick={handleDeactivate}>Deactivate Student</Button>
         </div>
     );
 }
