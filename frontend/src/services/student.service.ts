@@ -1,7 +1,7 @@
 import { api } from "@/lib/api";
 import { CreateStudentResponse, CreateStudentValues, UpdateStudentInput } from "@/types/student";
 
-export const getStudentsService = async (page: number = 1,limit: number = 10) => {
+export const getStudentsService = async (page: number = 1, limit: number = 10) => {
     return await api(`/students?page=${page}&limit=${limit}`);
 };
 
@@ -20,5 +20,11 @@ export const updateStudentService = async (studentId: string, data: UpdateStuden
     return await api(`/students/${studentId}`, {
         method: "PUT",
         body: JSON.stringify(data)
+    });
+};
+
+export const deactivateStudentService = async (studentId: string) => {
+    return await api(`/students/${studentId}/deactivate`, {
+        method: "PATCH"
     });
 };
