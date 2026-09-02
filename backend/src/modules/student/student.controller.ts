@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createStudentService, getStudentByIdService, getStudentsService, updateStudentService } from './student.service';
+import { createStudentService, deactivateStudentService, getStudentByIdService, getStudentsService, updateStudentService } from './student.service';
 import { getStudentQuerySchema, studentIdParamSchema, updateStudentSchema } from './student.validation';
 import catchAsync from '../../common/utils/catchAsync';
 
@@ -21,8 +21,14 @@ export const getStudentByIdController = catchAsync(async (req: Request, res: Res
 });
 
 export const updateStudentController = catchAsync(async (req: Request, res: Response) => {
-    const {id} = studentIdParamSchema.parse(req.params);
+    const { id } = studentIdParamSchema.parse(req.params);
     const data = updateStudentSchema.parse(req.body);
     const result = await updateStudentService(req.user!.schoolId, id, data);
     res.status(200).json(result);
+});
+
+export const deactivateStudentController = catchAsync(async (req: Request, res: Response) => {
+    const { id } = studentIdParamSchema.parse(req.params);
+    const result = await deactivateStudentService(req.user!.schoolId, id);
+    res.json(result);
 });
